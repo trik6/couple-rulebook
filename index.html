@@ -148,7 +148,6 @@
 
     .main-editor .black{
       color:#333;
-      font-weight:normal;
     }
 
     .table-area{
@@ -525,14 +524,14 @@
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
-    apiKey: "AIzaSyCmMC0UXaAhlGpEZmyOGsqjkkfX0I_eoJE",
-    authDomain: "couple-rulebook.firebaseapp.com",
-    projectId: "couple-rulebook",
-    storageBucket: "couple-rulebook.firebasestorage.app",
-    messagingSenderId: "498316039733",
-    appId: "1:498316039733:web:af9c61f7d012425e16037c"
-  };
-  
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "XXXX",
+      appId: "XXXX"
+    };
+
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
@@ -666,7 +665,7 @@
 
       editor.addEventListener('keyup',(event)=>{
         if(event.key === 'Enter'){
-          resetTypingColorToBlack();
+          resetTypingToBlackNormal();
           markTyping();
           saveAll();
         }
@@ -721,7 +720,7 @@
       selection.addRange(newRange);
     }
 
-    function resetTypingColorToBlack(){
+    function resetTypingToBlackNormal(){
       insertStyledCaret(
         '#333333',
         'normal'
@@ -744,11 +743,27 @@
     window.boldText = function(id){
       focusEditor(id);
 
-      document.execCommand(
-        'bold',
-        false,
-        null
-      );
+      const selection = window.getSelection();
+
+      if(selection.rangeCount > 0 && !selection.isCollapsed){
+        document.execCommand(
+          'bold',
+          false,
+          null
+        );
+      }else{
+        const currentColor =
+          document.queryCommandValue('foreColor');
+
+        const isRed =
+          currentColor === 'rgb(255, 59, 48)' ||
+          currentColor === '#ff3b30';
+
+        insertStyledCaret(
+          isRed ? '#ff3b30' : '#333333',
+          'bold'
+        );
+      }
 
       markTyping();
       saveAll();
@@ -757,23 +772,39 @@
     window.normalText = function(id){
       focusEditor(id);
 
-      document.execCommand(
-        'removeFormat',
-        false,
-        null
-      );
+      const selection = window.getSelection();
 
-      document.execCommand(
-        'foreColor',
-        false,
-        '#333333'
-      );
+      if(selection.rangeCount > 0 && !selection.isCollapsed){
+        document.execCommand(
+          'bold',
+          false,
+          false
+        );
 
-      document.execCommand(
-        'bold',
-        false,
-        false
-      );
+        document.execCommand(
+          'removeFormat',
+          false,
+          null
+        );
+
+        document.execCommand(
+          'foreColor',
+          false,
+          '#333333'
+        );
+      }else{
+        const currentColor =
+          document.queryCommandValue('foreColor');
+
+        const isRed =
+          currentColor === 'rgb(255, 59, 48)' ||
+          currentColor === '#ff3b30';
+
+        insertStyledCaret(
+          isRed ? '#ff3b30' : '#333333',
+          'normal'
+        );
+      }
 
       markTyping();
       saveAll();
@@ -790,16 +821,13 @@
           false,
           '#ff3b30'
         );
-
-        document.execCommand(
-          'bold',
-          false,
-          null
-        );
       }else{
+        const isBold =
+          document.queryCommandState('bold');
+
         insertStyledCaret(
           '#ff3b30',
-          'bold'
+          isBold ? 'bold' : 'normal'
         );
       }
 
@@ -814,20 +842,17 @@
 
       if(selection.rangeCount > 0 && !selection.isCollapsed){
         document.execCommand(
-          'removeFormat',
-          false,
-          null
-        );
-
-        document.execCommand(
           'foreColor',
           false,
           '#333333'
         );
       }else{
+        const isBold =
+          document.queryCommandState('bold');
+
         insertStyledCaret(
           '#333333',
-          'normal'
+          isBold ? 'bold' : 'normal'
         );
       }
 
