@@ -12,13 +12,11 @@
   <title>ふたりのルールブック</title>
 
   <link rel="manifest" href="manifest.json">
-
   <link rel="apple-touch-icon" href="icon.png">
 
   <meta name="theme-color" content="#ffffff">
 
   <style>
-
     *{
       box-sizing:border-box;
       -webkit-tap-highlight-color:transparent;
@@ -98,37 +96,30 @@
       flex-shrink:0;
     }
 
-    textarea.main-editor{
+    .main-editor{
       width:100%;
       min-height:45vh;
-      border:none;
-      resize:vertical;
       background:#f7f7f7;
       border-radius:16px;
       padding:16px;
       font-size:16px;
       line-height:1.9;
       outline:none;
-      font-family:inherit;
-      margin-bottom:0;
-    }
-
-    .preview{
-      margin-top:16px;
-      background:#fff;
-      border:1px solid #eee;
-      border-radius:16px;
-      padding:16px;
-      line-height:1.9;
-      font-size:16px;
       word-break:break-word;
+      overflow:auto;
     }
 
-    .preview b{
+    .main-editor:empty:before{
+      content:"ここに入力してください";
+      color:#aaa;
+    }
+
+    .main-editor b,
+    .main-editor strong{
       font-weight:bold;
     }
 
-    .preview .red{
+    .main-editor .red{
       color:#ff3b30;
       font-weight:bold;
     }
@@ -231,14 +222,12 @@
       color:#000;
       font-weight:bold;
     }
-
   </style>
 </head>
 
 <body>
 
   <div class="header">
-
     <div class="header-title">
       🏠 ふたりのルールブック
     </div>
@@ -246,211 +235,105 @@
     <div class="status" id="status">
       接続中...
     </div>
-
   </div>
 
   <div class="container">
 
-    <!-- 家事 -->
-
     <div class="section active" id="housework">
-
       <div class="card">
-
-        <div class="card-title">
-          🍳 家事
-        </div>
+        <div class="card-title">🍳 家事</div>
 
         <div class="toolbar">
-
-          <button onclick="insertText('houseworkText','【重要】')">
-            重要
-          </button>
-
-          <button onclick="insertText('houseworkText','・')">
-            リスト
-          </button>
-
-          <button onclick="wrapText('houseworkText','**','**')">
-            太字
-          </button>
-
-          <button onclick="wrapText('houseworkText','!!','!!')">
-            赤文字
-          </button>
-
-          <button onclick="undoText('houseworkText')">
-            戻る
-          </button>
-
-          <button onclick="createTable('houseworkTables')">
-            表作成
-          </button>
-
+          <button onclick="insertText('houseworkText','【重要】')">重要</button>
+          <button onclick="insertText('houseworkText','・')">リスト</button>
+          <button onclick="boldText('houseworkText')">太字</button>
+          <button onclick="redText('houseworkText')">赤文字</button>
+          <button onclick="undoAction()">戻る</button>
+          <button onclick="createTable('housework')">表作成</button>
         </div>
 
-        <textarea
+        <div
           id="houseworkText"
           class="main-editor"
-        ></textarea>
-
-        <div
-          class="preview"
-          id="houseworkPreview"
+          contenteditable="true"
         ></div>
 
         <div
           id="houseworkTables"
           class="table-area"
         ></div>
-
       </div>
-
     </div>
 
-    <!-- お金 -->
-
     <div class="section" id="money">
-
       <div class="card">
-
-        <div class="card-title">
-          💰 お金
-        </div>
+        <div class="card-title">💰 お金</div>
 
         <div class="toolbar">
-
-          <button onclick="insertText('moneyText','【重要】')">
-            重要
-          </button>
-
-          <button onclick="insertText('moneyText','・')">
-            リスト
-          </button>
-
-          <button onclick="wrapText('moneyText','**','**')">
-            太字
-          </button>
-
-          <button onclick="wrapText('moneyText','!!','!!')">
-            赤文字
-          </button>
-
-          <button onclick="undoText('moneyText')">
-            戻る
-          </button>
-
-          <button onclick="createTable('moneyTables')">
-            表作成
-          </button>
-
+          <button onclick="insertText('moneyText','【重要】')">重要</button>
+          <button onclick="insertText('moneyText','・')">リスト</button>
+          <button onclick="boldText('moneyText')">太字</button>
+          <button onclick="redText('moneyText')">赤文字</button>
+          <button onclick="undoAction()">戻る</button>
+          <button onclick="createTable('money')">表作成</button>
         </div>
 
-        <textarea
+        <div
           id="moneyText"
           class="main-editor"
-        ></textarea>
-
-        <div
-          class="preview"
-          id="moneyPreview"
+          contenteditable="true"
         ></div>
 
         <div
           id="moneyTables"
           class="table-area"
         ></div>
-
       </div>
-
     </div>
 
-    <!-- 未決定 -->
-
     <div class="section" id="todo">
-
       <div class="card">
-
-        <div class="card-title">
-          📝 未決定
-        </div>
+        <div class="card-title">📝 未決定</div>
 
         <div class="toolbar">
-
-          <button onclick="insertText('todoText','【重要】')">
-            重要
-          </button>
-
-          <button onclick="insertText('todoText','・')">
-            リスト
-          </button>
-
-          <button onclick="wrapText('todoText','**','**')">
-            太字
-          </button>
-
-          <button onclick="wrapText('todoText','!!','!!')">
-            赤文字
-          </button>
-
-          <button onclick="undoText('todoText')">
-            戻る
-          </button>
-
-          <button onclick="createTable('todoTables')">
-            表作成
-          </button>
-
+          <button onclick="insertText('todoText','【重要】')">重要</button>
+          <button onclick="insertText('todoText','・')">リスト</button>
+          <button onclick="boldText('todoText')">太字</button>
+          <button onclick="redText('todoText')">赤文字</button>
+          <button onclick="undoAction()">戻る</button>
+          <button onclick="createTable('todo')">表作成</button>
         </div>
 
-        <textarea
+        <div
           id="todoText"
           class="main-editor"
-        ></textarea>
-
-        <div
-          class="preview"
-          id="todoPreview"
+          contenteditable="true"
         ></div>
 
         <div
           id="todoTables"
           class="table-area"
         ></div>
-
       </div>
-
     </div>
 
   </div>
 
   <div class="bottom-nav">
-
-    <button
-      class="nav-btn active"
-      onclick="switchTab(this,'housework')"
-    >
+    <button class="nav-btn active" onclick="switchTab(this,'housework')">
       家事
     </button>
 
-    <button
-      class="nav-btn"
-      onclick="switchTab(this,'money')"
-    >
+    <button class="nav-btn" onclick="switchTab(this,'money')">
       お金
     </button>
 
-    <button
-      class="nav-btn"
-      onclick="switchTab(this,'todo')"
-    >
+    <button class="nav-btn" onclick="switchTab(this,'todo')">
       未決定
     </button>
-
   </div>
 
   <script type="module">
-
     import {
       initializeApp
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -463,428 +346,296 @@
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
-
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_PROJECT.firebaseapp.com",
       projectId: "YOUR_PROJECT",
       storageBucket: "YOUR_PROJECT.appspot.com",
       messagingSenderId: "XXXX",
       appId: "XXXX"
-
     };
 
     const app = initializeApp(firebaseConfig);
-
     const db = getFirestore(app);
 
-    const status =
-      document.getElementById('status');
+    const status = document.getElementById('status');
+    const ref = doc(db,'rulebook','shared');
 
-    const undoHistory = {};
-
-    let isTyping = false;
-
-    let userName =
-      localStorage.getItem('userName');
+    let userName = localStorage.getItem('userName');
 
     if(!userName){
-
-      userName =
-        prompt('名前を入力してください');
-
-      localStorage.setItem(
-        'userName',
-        userName
-      );
-
+      userName = prompt('名前を入力してください') || '未設定';
+      localStorage.setItem('userName',userName);
     }
 
-    const ref =
-      doc(db,'rulebook','shared');
+    let isTyping = false;
+    let isSaving = false;
+    let saveTimer = null;
 
-    let saving = false;
+    const tableData = {
+      housework:[],
+      money:[],
+      todo:[]
+    };
 
     onSnapshot(ref,(snapshot)=>{
-
       const data = snapshot.data();
 
       if(!data) return;
 
-      if(!saving && !isTyping){
-
-        document.getElementById(
-          'houseworkText'
-        ).value =
+      if(!isTyping && !isSaving){
+        document.getElementById('houseworkText').innerHTML =
           data.housework || '';
 
-        document.getElementById(
-          'moneyText'
-        ).value =
+        document.getElementById('moneyText').innerHTML =
           data.money || '';
 
-        document.getElementById(
-          'todoText'
-        ).value =
+        document.getElementById('todoText').innerHTML =
           data.todo || '';
 
-        renderPreview();
+        tableData.housework = data.houseworkTables || [];
+        tableData.money = data.moneyTables || [];
+        tableData.todo = data.todoTables || [];
 
+        renderTables('housework');
+        renderTables('money');
+        renderTables('todo');
       }
 
       status.innerHTML =
         `
-          最終編集：
-          ${data.updatedBy || '未設定'}
+          最終編集：${data.updatedBy || '未設定'}
           <br>
           同期済み
         `;
-
     });
 
+    function markTyping(){
+      isTyping = true;
+
+      clearTimeout(window.typingTimer);
+
+      window.typingTimer = setTimeout(()=>{
+        isTyping = false;
+      },1000);
+    }
+
     async function saveAll(){
+      clearTimeout(saveTimer);
 
-      saving = true;
+      saveTimer = setTimeout(async ()=>{
+        isSaving = true;
 
-      status.innerHTML =
-        `
-          保存中...
-          <br>
-          編集者：
-          ${userName}
-        `;
+        status.innerHTML =
+          `
+            保存中...
+            <br>
+            編集者：${userName}
+          `;
 
-      await setDoc(ref,{
+        await setDoc(ref,{
+          housework:document.getElementById('houseworkText').innerHTML,
+          money:document.getElementById('moneyText').innerHTML,
+          todo:document.getElementById('todoText').innerHTML,
+          houseworkTables:tableData.housework,
+          moneyTables:tableData.money,
+          todoTables:tableData.todo,
+          updatedBy:userName,
+          updatedAt:new Date()
+        });
 
-        housework:
-          document.getElementById(
-            'houseworkText'
-          ).value,
+        status.innerHTML =
+          `
+            保存済み
+            <br>
+            編集者：${userName}
+          `;
 
-        money:
-          document.getElementById(
-            'moneyText'
-          ).value,
+        setTimeout(()=>{
+          isSaving = false;
+        },500);
+      },400);
+    }
 
-        todo:
-          document.getElementById(
-            'todoText'
-          ).value,
+    document.querySelectorAll('.main-editor').forEach((editor)=>{
+      editor.addEventListener('input',()=>{
+        markTyping();
+        saveAll();
+      });
+    });
 
-        updatedBy:userName,
-
-        updatedAt:new Date()
-
+    window.switchTab = function(el,id){
+      document.querySelectorAll('.section').forEach((section)=>{
+        section.classList.remove('active');
       });
 
-      status.innerHTML =
-        `
-          保存済み
-          <br>
-          編集者：
-          ${userName}
-        `;
+      document.getElementById(id).classList.add('active');
 
-      setTimeout(()=>{
-
-        saving = false;
-
-      },300);
-
-    }
-
-    document
-      .querySelectorAll('.main-editor')
-      .forEach((textarea)=>{
-
-        textarea.addEventListener(
-          'input',
-          ()=>{
-
-            isTyping = true;
-
-            renderPreview();
-
-            saveAll();
-
-            clearTimeout(window.typingTimer);
-
-            window.typingTimer =
-              setTimeout(()=>{
-
-                isTyping = false;
-
-              },1000);
-
-          }
-        );
-
+      document.querySelectorAll('.nav-btn').forEach((btn)=>{
+        btn.classList.remove('active');
       });
 
-    function formatText(text){
-
-      return text
-
-        .replace(
-          /\*\*(.*?)\*\*/g,
-          '<b>$1</b>'
-        )
-
-        .replace(
-          /!!(.*?)!!/g,
-          '<span class="red">$1</span>'
-        )
-
-        .replace(/\n/g,'<br>');
-
+      el.classList.add('active');
     }
 
-    function renderPreview(){
-
-      document.getElementById(
-        'houseworkPreview'
-      ).innerHTML =
-        formatText(
-          document.getElementById(
-            'houseworkText'
-          ).value
-        );
-
-      document.getElementById(
-        'moneyPreview'
-      ).innerHTML =
-        formatText(
-          document.getElementById(
-            'moneyText'
-          ).value
-        );
-
-      document.getElementById(
-        'todoPreview'
-      ).innerHTML =
-        formatText(
-          document.getElementById(
-            'todoText'
-          ).value
-        );
-
+    function focusEditor(id){
+      const editor = document.getElementById(id);
+      editor.focus();
     }
 
-    renderPreview();
+    window.insertText = function(id,text){
+      focusEditor(id);
+      document.execCommand('insertText',false,text);
+      markTyping();
+      saveAll();
+    }
 
-    window.switchTab =
-      function(el,id){
+    window.boldText = function(id){
+      focusEditor(id);
+      document.execCommand('bold',false,null);
+      markTyping();
+      saveAll();
+    }
 
-        document
-          .querySelectorAll('.section')
-          .forEach((section)=>{
+    window.redText = function(id){
+      focusEditor(id);
 
-            section.classList.remove(
-              'active'
-            );
+      const selection = window.getSelection();
 
-          });
+      if(selection.rangeCount > 0 && !selection.isCollapsed){
+        const range = selection.getRangeAt(0);
+        const span = document.createElement('span');
 
-        document
-          .getElementById(id)
-          .classList.add('active');
+        span.className = 'red';
 
-        document
-          .querySelectorAll('.nav-btn')
-          .forEach((btn)=>{
-
-            btn.classList.remove(
-              'active'
-            );
-
-          });
-
-        el.classList.add('active');
-
-      }
-
-    window.insertText =
-      function(id,text){
-
-        const textarea =
-          document.getElementById(id);
-
-        undoHistory[id] =
-          textarea.value;
-
-        const start =
-          textarea.selectionStart;
-
-        const end =
-          textarea.selectionEnd;
-
-        textarea.value =
-          textarea.value.substring(0,start)
-          + text
-          + textarea.value.substring(end);
-
-        renderPreview();
-
-        saveAll();
-
-      }
-
-    window.wrapText =
-      function(id,before,after){
-
-        const textarea =
-          document.getElementById(id);
-
-        undoHistory[id] =
-          textarea.value;
-
-        const start =
-          textarea.selectionStart;
-
-        const end =
-          textarea.selectionEnd;
-
-        const selected =
-          textarea.value.substring(start,end);
-
-        textarea.value =
-          textarea.value.substring(0,start)
-          + before
-          + selected
-          + after
-          + textarea.value.substring(end);
-
-        renderPreview();
-
-        saveAll();
-
-      }
-
-    window.undoText =
-      function(id){
-
-        const textarea =
-          document.getElementById(id);
-
-        if(undoHistory[id]){
-
-          textarea.value =
-            undoHistory[id];
-
-          renderPreview();
-
-          saveAll();
-
+        try{
+          range.surroundContents(span);
+        }catch(e){
+          document.execCommand('foreColor',false,'#ff3b30');
         }
-
+      }else{
+        document.execCommand('foreColor',false,'#ff3b30');
       }
 
-    window.createTable =
-      function(targetId){
+      markTyping();
+      saveAll();
+    }
 
-        const target =
-          document.getElementById(targetId);
+    window.undoAction = function(){
+      document.execCommand('undo',false,null);
+      markTyping();
+      saveAll();
+    }
 
-        const tableCard =
-          document.createElement('div');
+    window.createTable = function(section){
+      tableData[section].push({
+        rows:[
+          {
+            person:'自分',
+            content:'ここに入力'
+          }
+        ]
+      });
 
-        tableCard.className =
-          'table-card';
+      renderTables(section);
+      saveAll();
+    }
+
+    function renderTables(section){
+      const target = document.getElementById(section + 'Tables');
+
+      target.innerHTML = '';
+
+      tableData[section].forEach((table,tableIndex)=>{
+        const tableCard = document.createElement('div');
+
+        tableCard.className = 'table-card';
 
         tableCard.innerHTML =
           `
             <div class="table-top">
-
-              <strong>
-                表
-              </strong>
+              <strong>表</strong>
 
               <div class="table-actions">
-
-                <button
-                  class="table-btn add-row-btn"
-                >
+                <button class="table-btn add-row-btn">
                   行追加
                 </button>
 
-                <button
-                  class="table-btn delete-btn"
-                >
+                <button class="table-btn delete-btn">
                   表削除
                 </button>
-
               </div>
-
             </div>
 
             <table class="rule-table">
-
               <thead>
-
                 <tr>
                   <th>担当</th>
                   <th>内容</th>
                 </tr>
-
               </thead>
 
-              <tbody>
-              </tbody>
-
+              <tbody></tbody>
             </table>
           `;
 
-        target.appendChild(tableCard);
+        const tbody = tableCard.querySelector('tbody');
 
-        const tbody =
-          tableCard.querySelector('tbody');
+        table.rows.forEach((row,rowIndex)=>{
+          const tr = document.createElement('tr');
 
-        function addRow(){
-
-          const row =
-            document.createElement('tr');
-
-          row.innerHTML =
+          tr.innerHTML =
             `
               <td>
-                <textarea>自分</textarea>
+                <textarea>${row.person || ''}</textarea>
               </td>
 
               <td>
-                <textarea>ここに入力</textarea>
+                <textarea>${row.content || ''}</textarea>
               </td>
             `;
 
-          tbody.appendChild(row);
+          const textareas = tr.querySelectorAll('textarea');
 
-        }
+          textareas[0].addEventListener('input',()=>{
+            tableData[section][tableIndex].rows[rowIndex].person =
+              textareas[0].value;
 
-        addRow();
+            saveAll();
+          });
 
-        tableCard
-          .querySelector('.add-row-btn')
-          .onclick = ()=>{
+          textareas[1].addEventListener('input',()=>{
+            tableData[section][tableIndex].rows[rowIndex].content =
+              textareas[1].value;
 
-            addRow();
+            saveAll();
+          });
 
-          };
+          tbody.appendChild(tr);
+        });
 
-        tableCard
-          .querySelector('.delete-btn')
-          .onclick = ()=>{
+        tableCard.querySelector('.add-row-btn').onclick = ()=>{
+          tableData[section][tableIndex].rows.push({
+            person:'自分',
+            content:'ここに入力'
+          });
 
-            const ok =
-              confirm('本当に表を削除しますか？');
+          renderTables(section);
+          saveAll();
+        };
 
-            if(ok){
+        tableCard.querySelector('.delete-btn').onclick = ()=>{
+          const ok = confirm('本当に表を削除しますか？');
 
-              tableCard.remove();
+          if(ok){
+            tableData[section].splice(tableIndex,1);
+            renderTables(section);
+            saveAll();
+          }
+        };
 
-            }
-
-          };
-
-      }
-
+        target.appendChild(tableCard);
+      });
+    }
   </script>
 
 </body>
