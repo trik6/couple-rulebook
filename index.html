@@ -196,7 +196,7 @@
       border:1px solid #ddd;
       padding:10px;
       vertical-align:top;
-      min-width:120px;
+      min-width:110px;
     }
 
     .rule-table textarea{
@@ -214,6 +214,23 @@
 
     .rule-table textarea::placeholder{
       color:#aaa;
+    }
+
+    .row-delete-cell{
+      width:72px;
+      min-width:72px;
+      text-align:center;
+      vertical-align:middle;
+    }
+
+    .row-delete-btn{
+      border:none;
+      background:#eee;
+      color:#666;
+      border-radius:8px;
+      padding:8px 10px;
+      font-size:12px;
+      white-space:nowrap;
     }
 
     .bottom-nav{
@@ -257,8 +274,6 @@
   </div>
 
   <div class="container">
-
-    <!-- 家事 -->
 
     <div class="section active" id="housework">
       <div class="card">
@@ -309,8 +324,6 @@
       </div>
     </div>
 
-    <!-- お金 -->
-
     <div class="section" id="money">
       <div class="card">
         <div class="card-title">
@@ -359,8 +372,6 @@
         ></div>
       </div>
     </div>
-
-    <!-- 未決定 -->
 
     <div class="section" id="todo">
       <div class="card">
@@ -439,7 +450,7 @@
       onSnapshot
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  const firebaseConfig = {
+    const firebaseConfig = {
     apiKey: "AIzaSyCmMC0UXaAhlGpEZmyOGsqjkkfX0I_eoJE",
     authDomain: "couple-rulebook.firebaseapp.com",
     projectId: "couple-rulebook",
@@ -739,6 +750,7 @@
                 <tr>
                   <th>担当</th>
                   <th>内容</th>
+                  <th class="row-delete-cell">削除</th>
                 </tr>
               </thead>
 
@@ -771,6 +783,12 @@
               <td>
                 <textarea placeholder="内容"></textarea>
               </td>
+
+              <td class="row-delete-cell">
+                <button class="row-delete-btn">
+                  行削除
+                </button>
+              </td>
             `;
 
           const textareas = tr.querySelectorAll('textarea');
@@ -793,6 +811,25 @@
             markTyping();
             saveAll();
           });
+
+          tr.querySelector('.row-delete-btn').onclick = ()=>{
+            const ok = confirm('この行を削除しますか？');
+
+            if(ok){
+              tableData[section][tableIndex].rows.splice(rowIndex,1);
+
+              if(tableData[section][tableIndex].rows.length === 0){
+                tableData[section][tableIndex].rows.push({
+                  person:'',
+                  content:''
+                });
+              }
+
+              renderTables(section);
+              markTyping();
+              saveAll();
+            }
+          };
 
           tbody.appendChild(tr);
         });
