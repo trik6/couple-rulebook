@@ -663,6 +663,14 @@
         markTyping();
         saveAll();
       });
+
+      editor.addEventListener('keyup',(event)=>{
+        if(event.key === 'Enter'){
+          resetTypingColorToBlack();
+          markTyping();
+          saveAll();
+        }
+      });
     });
 
     window.switchTab = function(el,id){
@@ -682,6 +690,14 @@
     function focusEditor(id){
       const editor = document.getElementById(id);
       editor.focus();
+    }
+
+    function resetTypingColorToBlack(){
+      document.execCommand(
+        'foreColor',
+        false,
+        '#333333'
+      );
     }
 
     window.insertText = function(id,text){
@@ -738,30 +754,11 @@
     window.redText = function(id){
       focusEditor(id);
 
-      const selection = window.getSelection();
-
-      if(selection.rangeCount > 0 && !selection.isCollapsed){
-        const range = selection.getRangeAt(0);
-        const span = document.createElement('span');
-
-        span.className = 'red';
-
-        try{
-          range.surroundContents(span);
-        }catch(error){
-          document.execCommand(
-            'foreColor',
-            false,
-            '#ff3b30'
-          );
-        }
-      }else{
-        document.execCommand(
-          'foreColor',
-          false,
-          '#ff3b30'
-        );
-      }
+      document.execCommand(
+        'foreColor',
+        false,
+        '#ff3b30'
+      );
 
       markTyping();
       saveAll();
@@ -770,30 +767,23 @@
     window.blackText = function(id){
       focusEditor(id);
 
-      const selection = window.getSelection();
+      document.execCommand(
+        'foreColor',
+        false,
+        '#333333'
+      );
 
-      if(selection.rangeCount > 0 && !selection.isCollapsed){
-        const range = selection.getRangeAt(0);
-        const span = document.createElement('span');
+      document.execCommand(
+        'removeFormat',
+        false,
+        null
+      );
 
-        span.className = 'black';
-
-        try{
-          range.surroundContents(span);
-        }catch(error){
-          document.execCommand(
-            'foreColor',
-            false,
-            '#333333'
-          );
-        }
-      }else{
-        document.execCommand(
-          'foreColor',
-          false,
-          '#333333'
-        );
-      }
+      document.execCommand(
+        'foreColor',
+        false,
+        '#333333'
+      );
 
       markTyping();
       saveAll();
