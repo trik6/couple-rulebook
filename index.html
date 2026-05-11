@@ -161,11 +161,13 @@
       width:100%;
       border:none;
       resize:vertical;
-      min-height:70px;
+      min-height:60px;
       font-size:14px;
       font-family:inherit;
       background:transparent;
       outline:none;
+      display:block;
+      overflow:auto;
     }
 
     .bottom-nav{
@@ -233,6 +235,18 @@
             リスト
           </button>
 
+          <button onclick="wrapText('houseworkText','**','**')">
+            太字
+          </button>
+
+          <button onclick="wrapText('houseworkText','🔴','🔴')">
+            赤文字
+          </button>
+
+          <button onclick="undoText('houseworkText')">
+            戻る
+          </button>
+
           <button onclick="addTable('houseworkTables')">
             表追加
           </button>
@@ -273,6 +287,18 @@
             リスト
           </button>
 
+          <button onclick="wrapText('moneyText','**','**')">
+            太字
+          </button>
+
+          <button onclick="wrapText('moneyText','🔴','🔴')">
+            赤文字
+          </button>
+
+          <button onclick="undoText('moneyText')">
+            戻る
+          </button>
+
           <button onclick="addTable('moneyTables')">
             表追加
           </button>
@@ -311,6 +337,18 @@
 
           <button onclick="insertText('todoText','・')">
             リスト
+          </button>
+
+          <button onclick="wrapText('todoText','**','**')">
+            太字
+          </button>
+
+          <button onclick="wrapText('todoText','🔴','🔴')">
+            赤文字
+          </button>
+
+          <button onclick="undoText('todoText')">
+            戻る
           </button>
 
           <button onclick="addTable('todoTables')">
@@ -408,6 +446,8 @@
       doc(db,'rulebook','shared');
 
     let saving = false;
+
+    const undoHistory = {};
 
     onSnapshot(ref,(snapshot)=>{
 
@@ -611,6 +651,9 @@
         const textarea =
           document.getElementById(id);
 
+        undoHistory[id] =
+          textarea.value;
+
         const start =
           textarea.selectionStart;
 
@@ -632,55 +675,142 @@
 
       }
 
+    window.wrapText =
+      function(id,before,after){
+
+        const textarea =
+          document.getElementById(id);
+
+        undoHistory[id] =
+          textarea.value;
+
+        const start =
+          textarea.selectionStart;
+
+        const end =
+          textarea.selectionEnd;
+
+        const selected =
+          textarea.value.substring(start,end);
+
+        textarea.value =
+          textarea.value.substring(0,start)
+          + before
+          + selected
+          + after
+          + textarea.value.substring(end);
+
+        saveAll();
+
+      }
+
+    window.undoText =
+      function(id){
+
+        const textarea =
+          document.getElementById(id);
+
+        if(undoHistory[id]){
+
+          textarea.value =
+            undoHistory[id];
+
+          saveAll();
+
+        }
+
+      }
+
     window.addTable =
       function(targetId){
 
         const target =
           document.getElementById(targetId);
 
-        const wrapper =
-          document.createElement('div');
+        let tableCard =
+          target.querySelector('.table-card');
 
-        wrapper.className =
-          'table-card';
+        if(!tableCard){
 
-        wrapper.innerHTML =
+          tableCard =
+            document.createElement('div');
+
+          tableCard.className =
+            'table-card';
+
+          tableCard.innerHTML =
+            `
+              <div class="table-top">
+
+                <button
+                  class="delete-btn"
+                >
+                  表を削除
+                </button>
+
+              </div>
+
+              <table class="rule-table">
+
+                <thead>
+
+                  <tr>
+                    <th>担当</th>
+                    <th>内容</th>
+                  </tr>
+
+                </thead>
+
+                <tbody>
+                </tbody>
+
+              </table>
+            `;
+
+          target.appendChild(tableCard);
+
+          tableCard
+            .querySelector('.delete-btn')
+            .onclick = ()=>{
+
+              tableCard.remove();
+
+              saveAll();
+
+            };
+
+        }
+
+        const tbody =
+          tableCard.querySelector('tbody');
+
+        const row =
+          document.createElement('tr');
+
+        row.innerHTML =
           `
-            <div class="table-top">
+            <td>
+              <textarea>自分</textarea>
+            </td>
 
-              <button
-                class="delete-btn"
-              >
-                表を削除
-              </button>
-
-            </div>
-
-            <table class="rule-table">
-
-              <tr>
-                <th>担当</th>
-                <th>内容</th>
-              </tr>
-
-              <tr>
-
-                <td>
-                  <textarea>自分</textarea>
-                </td>
-
-                <td>
-                  <textarea>ここに入力</textarea>
-                </td>
-
-              </tr>
-
-            </table>
+            <td>
+              <textarea>ここに入力</textarea>
+            </td>
           `;
 
-        target.appendChild(wrapper);
+        tbody.appendChild(row);
 
-        bindTableEvents();
+        row
+          .querySelectorAll('textarea')
+          .forEach((textarea)=>{
+
+            textarea.oninput = ()=>{
+
+              saveAll();
+
+            };
+
+          });
 
         saveAll();
 
