@@ -1,218 +1,352 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="ja">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.3">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'}
-  </style>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+viewport-fit=cover">
+
+<title>ふたりのルールブック</title>
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#ffffff">
+
+<style>
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+  background:#f5f5f7;
+  color:#333;
+  padding-bottom:90px;
+}
+
+.header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(255,255,255,0.9);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid #eee;
+  padding:16px;
+}
+
+.header-title{
+  font-size:22px;
+  font-weight:bold;
+}
+
+.status{
+  margin-top:4px;
+  font-size:12px;
+  color:#666;
+}
+
+.container{
+  padding:16px;
+}
+
+.section{
+  display:none;
+}
+
+.section.active{
+  display:block;
+}
+
+.card{
+  background:#fff;
+  border-radius:20px;
+  padding:18px;
+  margin-bottom:16px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.06);
+}
+
+.card-title{
+  font-size:18px;
+  font-weight:bold;
+  margin-bottom:12px;
+}
+
+textarea{
+  width:100%;
+  min-height:180px;
+  border:none;
+  resize:none;
+  background:#f7f7f7;
+  border-radius:16px;
+  padding:14px;
+  font-size:16px;
+  line-height:1.7;
+  outline:none;
+}
+
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  display:flex;
+  background:#fff;
+  border-top:1px solid #ddd;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+
+.nav-btn{
+  flex:1;
+  border:none;
+  background:none;
+  padding:14px 0;
+  font-size:13px;
+  color:#666;
+}
+
+.nav-btn.active{
+  color:#000;
+  font-weight:bold;
+}
+
+</style>
 </head>
+
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="ja"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1">&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1">&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;title&gt;ふたりのルールブック&lt;/title&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;style&gt;</p>
-<p class="p1">*{</p>
-<p class="p1"><span class="Apple-converted-space">  </span>box-sizing:border-box;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>-webkit-tap-highlight-color:transparent;</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">body{</p>
-<p class="p1"><span class="Apple-converted-space">  </span>margin:0;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>font-family:-apple-system,BlinkMacSystemFont,sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>background:#f5f5f7;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>color:#333;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>padding-bottom:100px;</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">.header{</p>
-<p class="p1"><span class="Apple-converted-space">  </span>position:sticky;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>top:0;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>background:rgba(255,255,255,0.9);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>backdrop-filter:blur(10px);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>padding:20px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>text-align:center;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>font-size:22px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>font-weight:bold;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>border-bottom:1px solid #eee;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>z-index:10;</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">.container{</p>
-<p class="p1"><span class="Apple-converted-space">  </span>padding:16px;</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">.card{</p>
-<p class="p1"><span class="Apple-converted-space">  </span>background:#fff;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>border-radius:20px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>padding:18px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>margin-bottom:16px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>box-shadow:0 4px 12px rgba(0,0,0,0.06);</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">.card-title{</p>
-<p class="p1"><span class="Apple-converted-space">  </span>font-size:18px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>font-weight:bold;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>margin-bottom:12px;</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">textarea{</p>
-<p class="p1"><span class="Apple-converted-space">  </span>width:100%;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>border:none;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>resize:none;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>background:#f7f7f7;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>border-radius:12px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>padding:14px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>font-size:16px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>line-height:1.6;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>margin-bottom:12px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>outline:none;</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">.save-btn{</p>
-<p class="p1"><span class="Apple-converted-space">  </span>position:fixed;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>right:16px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>bottom:30px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>width:64px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>height:64px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>border:none;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>border-radius:50%;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>background:#000;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>color:#fff;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>font-weight:bold;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>box-shadow:0 6px 16px rgba(0,0,0,0.2);</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">.status{</p>
-<p class="p1"><span class="Apple-converted-space">  </span>text-align:center;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>font-size:13px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>color:#666;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>margin-top:8px;</p>
-<p class="p1">}</p>
-<p class="p1">&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;div class="header"&gt;</p>
-<p class="p1">🏠 ふたりのルールブック</p>
-<p class="p1">&lt;div class="status" id="status"&gt;</p>
-<p class="p1">同期中...</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;div class="container"&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card-title"&gt;🍳 家事&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;textarea id="housework"&gt;</p>
-<p class="p1">食器は溜めすぎない</p>
-<p class="p1">洗濯はできる方が回す</p>
-<p class="p1">無理な日は共有する</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/textarea&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card-title"&gt;💰 お金&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;textarea id="money"&gt;</p>
-<p class="p1">日用品は割り勘</p>
-<p class="p1">高額購入は相談</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/textarea&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card-title"&gt;🫶 大事にしたいこと&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;textarea id="mind"&gt;</p>
-<p class="p1">感謝を言葉にする</p>
-<p class="p1">疲れている時は助け合う</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/textarea&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;button class="save-btn" onclick="saveData()"&gt;</p>
-<p class="p1">保存</p>
-<p class="p1">&lt;/button&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;script type="module"&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";</p>
-<p class="p2"><br></p>
-<p class="p1">import {</p>
-<p class="p1"><span class="Apple-converted-space">  </span>getFirestore,</p>
-<p class="p1"><span class="Apple-converted-space">  </span>doc,</p>
-<p class="p1"><span class="Apple-converted-space">  </span>setDoc,</p>
-<p class="p1"><span class="Apple-converted-space">  </span>getDoc</p>
-<p class="p1">} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";</p>
-<p class="p2"><br></p>
-<p class="p3"><span class="Apple-converted-space">  </span>const firebaseConfig = {</p>
-<p class="p3"><span class="Apple-converted-space">    </span>apiKey: "AIzaSyCmMC0UXaAhlGpEZmyOGsqjkkfX0I_eoJE",</p>
-<p class="p3"><span class="Apple-converted-space">    </span>authDomain: "couple-rulebook.firebaseapp.com",</p>
-<p class="p3"><span class="Apple-converted-space">    </span>projectId: "couple-rulebook",</p>
-<p class="p3"><span class="Apple-converted-space">    </span>storageBucket: "couple-rulebook.firebasestorage.app",</p>
-<p class="p3"><span class="Apple-converted-space">    </span>messagingSenderId: "498316039733",</p>
-<p class="p3"><span class="Apple-converted-space">    </span>appId: "1:498316039733:web:af9c61f7d012425e16037c"</p>
-<p class="p3"><span class="Apple-converted-space">  </span>};</p>
-<p class="p2"><br></p>
-<p class="p1">const app = initializeApp(firebaseConfig);</p>
-<p class="p2"><br></p>
-<p class="p1">const db = getFirestore(app);</p>
-<p class="p2"><br></p>
-<p class="p1">const status = document.getElementById('status');</p>
-<p class="p2"><br></p>
-<p class="p1">async function loadData(){</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const docRef = doc(db, "rulebook", "shared");</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const docSnap = await getDoc(docRef);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(docSnap.exists()){</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>const data = docSnap.data();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('housework').value = data.housework || '';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('money').value = data.money || '';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('mind').value = data.mind || '';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>status.innerText = '同期済み';</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">window.saveData = async function(){</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>status.innerText = '保存中...';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>await setDoc(doc(db, "rulebook", "shared"), {</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>housework: document.getElementById('housework').value,</p>
-<p class="p1"><span class="Apple-converted-space">    </span>money: document.getElementById('money').value,</p>
-<p class="p1"><span class="Apple-converted-space">    </span>mind: document.getElementById('mind').value,</p>
-<p class="p1"><span class="Apple-converted-space">    </span>updatedAt: new Date()</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>status.innerText = '保存完了';</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">loadData();</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/script&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+
+<div class="header">
+
+  <div class="header-title">
+    🏠 ふたりのルールブック
+  </div>
+
+  <div class="status" id="status">
+    接続中...
+  </div>
+
+</div>
+
+<div class="container">
+
+  <div class="section active" id="housework">
+
+    <div class="card">
+      <div class="card-title">
+        🍳 家事
+      </div>
+
+      <textarea id="houseworkText"></textarea>
+    </div>
+
+  </div>
+
+  <div class="section" id="money">
+
+    <div class="card">
+      <div class="card-title">
+        💰 お金
+      </div>
+
+      <textarea id="moneyText"></textarea>
+    </div>
+
+  </div>
+
+  <div class="section" id="mind">
+
+    <div class="card">
+      <div class="card-title">
+        🫶 価値観
+      </div>
+
+      <textarea id="mindText"></textarea>
+    </div>
+
+  </div>
+
+  <div class="section" id="todo">
+
+    <div class="card">
+      <div class="card-title">
+        📝 未決め
+      </div>
+
+      <textarea id="todoText"></textarea>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="bottom-nav">
+
+  <button
+  class="nav-btn active"
+  onclick="switchTab(this,'housework')">
+  家事
+  </button>
+
+  <button
+  class="nav-btn"
+  onclick="switchTab(this,'money')">
+  お金
+  </button>
+
+  <button
+  class="nav-btn"
+  onclick="switchTab(this,'mind')">
+  価値観
+  </button>
+
+  <button
+  class="nav-btn"
+  onclick="switchTab(this,'todo')">
+  未決め
+  </button>
+
+</div>
+
+<script type="module">
+
+import {
+initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+
+getFirestore,
+doc,
+setDoc,
+onSnapshot
+
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCmMC0UXaAhlGpEZmyOGsqjkkfX0I_eoJE",
+    authDomain: "couple-rulebook.firebaseapp.com",
+    projectId: "couple-rulebook",
+    storageBucket: "couple-rulebook.firebasestorage.app",
+    messagingSenderId: "498316039733",
+    appId: "1:498316039733:web:af9c61f7d012425e16037c"
+  };
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const status = document.getElementById('status');
+
+let userName = localStorage.getItem('userName');
+
+if(!userName){
+
+  userName = prompt('名前を入力してください');
+
+  localStorage.setItem('userName',userName);
+
+}
+
+const ref = doc(db,'rulebook','shared');
+
+onSnapshot(ref,(snapshot)=>{
+
+  const data = snapshot.data();
+
+  if(!data) return;
+
+  document.getElementById('houseworkText').value =
+  data.housework || '';
+
+  document.getElementById('moneyText').value =
+  data.money || '';
+
+  document.getElementById('mindText').value =
+  data.mind || '';
+
+  document.getElementById('todoText').value =
+  data.todo || '';
+
+  status.innerText =
+  '最終編集：' +
+  (data.updatedBy || '');
+
+});
+
+async function autoSave(){
+
+  status.innerText = '保存中...';
+
+  await setDoc(ref,{
+
+    housework:
+    document.getElementById('houseworkText').value,
+
+    money:
+    document.getElementById('moneyText').value,
+
+    mind:
+    document.getElementById('mindText').value,
+
+    todo:
+    document.getElementById('todoText').value,
+
+    updatedBy:userName,
+
+    updatedAt:new Date()
+
+  });
+
+}
+
+document
+.querySelectorAll('textarea')
+.forEach((textarea)=>{
+
+  textarea.addEventListener('input',()=>{
+
+    autoSave();
+
+  });
+
+});
+
+window.switchTab = function(el,id){
+
+  document
+  .querySelectorAll('.section')
+  .forEach((section)=>{
+
+    section.classList.remove('active');
+
+  });
+
+  document
+  .getElementById(id)
+  .classList.add('active');
+
+  document
+  .querySelectorAll('.nav-btn')
+  .forEach((btn)=>{
+
+    btn.classList.remove('active');
+
+  });
+
+  el.classList.add('active');
+
+}
+
+</script>
+
 </body>
 </html>
