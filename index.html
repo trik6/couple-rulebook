@@ -124,20 +124,34 @@
 
     .table-top{
       display:flex;
-      justify-content:flex-end;
+      justify-content:space-between;
+      align-items:center;
       padding:10px;
       background:#f7f7f7;
       border-bottom:1px solid #eee;
     }
 
-    .delete-btn{
+    .table-actions{
+      display:flex;
+      gap:8px;
+    }
+
+    .table-btn{
       border:none;
-      background:#ff4d4f;
-      color:#fff;
       border-radius:10px;
       padding:10px 14px;
       font-size:12px;
       font-weight:bold;
+    }
+
+    .add-row-btn{
+      background:#222;
+      color:#fff;
+    }
+
+    .delete-btn{
+      background:#ff4d4f;
+      color:#fff;
     }
 
     .rule-table{
@@ -167,7 +181,6 @@
       background:transparent;
       outline:none;
       display:block;
-      overflow:auto;
     }
 
     .bottom-nav{
@@ -247,8 +260,8 @@
             戻る
           </button>
 
-          <button onclick="addTable('houseworkTables')">
-            表追加
+          <button onclick="createTable('houseworkTables')">
+            表作成
           </button>
 
         </div>
@@ -299,8 +312,8 @@
             戻る
           </button>
 
-          <button onclick="addTable('moneyTables')">
-            表追加
+          <button onclick="createTable('moneyTables')">
+            表作成
           </button>
 
         </div>
@@ -351,8 +364,8 @@
             戻る
           </button>
 
-          <button onclick="addTable('todoTables')">
-            表追加
+          <button onclick="createTable('todoTables')">
+            表作成
           </button>
 
         </div>
@@ -412,12 +425,14 @@
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
+
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_PROJECT.firebaseapp.com",
       projectId: "YOUR_PROJECT",
       storageBucket: "YOUR_PROJECT.appspot.com",
       messagingSenderId: "XXXX",
       appId: "XXXX"
+
     };
 
     const app = initializeApp(firebaseConfig);
@@ -426,6 +441,8 @@
 
     const status =
       document.getElementById('status');
+
+    const undoHistory = {};
 
     let userName =
       localStorage.getItem('userName');
@@ -446,8 +463,6 @@
       doc(db,'rulebook','shared');
 
     let saving = false;
-
-    const undoHistory = {};
 
     onSnapshot(ref,(snapshot)=>{
 
@@ -471,23 +486,6 @@
           'todoText'
         ).value =
           data.todo || '';
-
-        document.getElementById(
-          'houseworkTables'
-        ).innerHTML =
-          data.houseworkTables || '';
-
-        document.getElementById(
-          'moneyTables'
-        ).innerHTML =
-          data.moneyTables || '';
-
-        document.getElementById(
-          'todoTables'
-        ).innerHTML =
-          data.todoTables || '';
-
-        bindTableEvents();
 
       }
 
@@ -530,21 +528,6 @@
             'todoText'
           ).value,
 
-        houseworkTables:
-          document.getElementById(
-            'houseworkTables'
-          ).innerHTML,
-
-        moneyTables:
-          document.getElementById(
-            'moneyTables'
-          ).innerHTML,
-
-        todoTables:
-          document.getElementById(
-            'todoTables'
-          ).innerHTML,
-
         updatedBy:userName,
 
         updatedAt:new Date()
@@ -564,38 +547,6 @@
         saving = false;
 
       },300);
-
-    }
-
-    function bindTableEvents(){
-
-      document
-        .querySelectorAll('.rule-table textarea')
-        .forEach((textarea)=>{
-
-          textarea.oninput = ()=>{
-
-            saveAll();
-
-          };
-
-        });
-
-      document
-        .querySelectorAll('.delete-btn')
-        .forEach((btn)=>{
-
-          btn.onclick = ()=>{
-
-            btn
-              .closest('.table-card')
-              .remove();
-
-            saveAll();
-
-          };
-
-        });
 
     }
 
@@ -665,12 +616,6 @@
           + text
           + textarea.value.substring(end);
 
-        textarea.focus();
-
-        textarea.selectionStart =
-          textarea.selectionEnd =
-          start + text.length;
-
         saveAll();
 
       }
@@ -721,98 +666,103 @@
 
       }
 
-    window.addTable =
+    window.createTable =
       function(targetId){
 
         const target =
           document.getElementById(targetId);
 
-        let tableCard =
-          target.querySelector('.table-card');
+        const tableCard =
+          document.createElement('div');
 
-        if(!tableCard){
+        tableCard.className =
+          'table-card';
 
-          tableCard =
-            document.createElement('div');
+        tableCard.innerHTML =
+          `
+            <div class="table-top">
 
-          tableCard.className =
-            'table-card';
+              <strong>
+                表
+              </strong>
 
-          tableCard.innerHTML =
-            `
-              <div class="table-top">
+              <div class="table-actions">
 
                 <button
-                  class="delete-btn"
+                  class="table-btn add-row-btn"
                 >
-                  表を削除
+                  行追加
+                </button>
+
+                <button
+                  class="table-btn delete-btn"
+                >
+                  表削除
                 </button>
 
               </div>
 
-              <table class="rule-table">
+            </div>
 
-                <thead>
+            <table class="rule-table">
 
-                  <tr>
-                    <th>担当</th>
-                    <th>内容</th>
-                  </tr>
+              <thead>
 
-                </thead>
+                <tr>
+                  <th>担当</th>
+                  <th>内容</th>
+                </tr>
 
-                <tbody>
-                </tbody>
+              </thead>
 
-              </table>
-            `;
+              <tbody>
+              </tbody>
 
-          target.appendChild(tableCard);
+            </table>
+          `;
 
-          tableCard
-            .querySelector('.delete-btn')
-            .onclick = ()=>{
-
-              tableCard.remove();
-
-              saveAll();
-
-            };
-
-        }
+        target.appendChild(tableCard);
 
         const tbody =
           tableCard.querySelector('tbody');
 
-        const row =
-          document.createElement('tr');
+        function addRow(){
 
-        row.innerHTML =
-          `
-            <td>
-              <textarea>自分</textarea>
-            </td>
+          const row =
+            document.createElement('tr');
 
-            <td>
-              <textarea>ここに入力</textarea>
-            </td>
-          `;
+          row.innerHTML =
+            `
+              <td>
+                <textarea>自分</textarea>
+              </td>
 
-        tbody.appendChild(row);
+              <td>
+                <textarea>ここに入力</textarea>
+              </td>
+            `;
 
-        row
-          .querySelectorAll('textarea')
-          .forEach((textarea)=>{
+          tbody.appendChild(row);
 
-            textarea.oninput = ()=>{
+        }
 
-              saveAll();
+        addRow();
 
-            };
+        tableCard
+          .querySelector('.add-row-btn')
+          .onclick = ()=>{
 
-          });
+            addRow();
 
-        saveAll();
+          };
+
+        tableCard
+          .querySelector('.delete-btn')
+          .onclick = ()=>{
+
+            tableCard.remove();
+
+          };
 
       }
 
