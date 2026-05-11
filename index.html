@@ -29,7 +29,7 @@
       background:#f5f5f7;
       color:#333;
       font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-      padding-bottom:120px;
+      padding-bottom:160px;
     }
 
     .header{
@@ -85,6 +85,7 @@
       gap:8px;
       overflow-x:auto;
       margin-bottom:14px;
+      padding-bottom:4px;
     }
 
     .toolbar button{
@@ -94,6 +95,7 @@
       padding:10px 14px;
       font-size:13px;
       white-space:nowrap;
+      flex-shrink:0;
     }
 
     textarea.main-editor{
@@ -108,777 +110,21 @@
       line-height:1.9;
       outline:none;
       font-family:inherit;
-    }
-
-    .table-area{
-      margin-top:18px;
-    }
-
-    .table-card{
-      border:1px solid #ddd;
-      border-radius:16px;
-      overflow:hidden;
-      margin-bottom:18px;
-      background:#fff;
-    }
-
-    .table-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:10px;
-      background:#f7f7f7;
-      border-bottom:1px solid #eee;
-    }
-
-    .table-actions{
-      display:flex;
-      gap:8px;
-    }
-
-    .table-btn{
-      border:none;
-      border-radius:10px;
-      padding:10px 14px;
-      font-size:12px;
-      font-weight:bold;
-    }
-
-    .add-row-btn{
-      background:#222;
-      color:#fff;
-    }
-
-    .delete-btn{
-      background:#ff4d4f;
-      color:#fff;
-    }
-
-    .rule-table{
-      width:100%;
-      border-collapse:collapse;
-    }
-
-    .rule-table th{
-      background:#f0f0f0;
-    }
-
-    .rule-table th,
-    .rule-table td{
-      border:1px solid #ddd;
-      padding:10px;
-      vertical-align:top;
-      min-width:120px;
-    }
-
-    .rule-table textarea{
-      width:100%;
-      border:none;
-      resize:vertical;
-      min-height:60px;
-      font-size:14px;
-      font-family:inherit;
-      background:transparent;
-      outline:none;
-      display:block;
-    }
-
-    .bottom-nav{
-      position:fixed;
-      bottom:0;
-      left:0;
-      width:100%;
-      display:flex;
-      background:#fff;
-      border-top:1px solid #ddd;
-      padding-bottom:env(safe-area-inset-bottom);
-      z-index:999;
-    }
-
-    .nav-btn{
-      flex:1;
-      border:none;
-      background:none;
-      padding:14px 0;
-      font-size:13px;
-      color:#666;
-    }
-
-    .nav-btn.active{
-      color:#000;
-      font-weight:bold;
-    }
-
-  </style>
-</head>
-
-<body>
-
-  <div class="header">
-
-    <div class="header-title">
-      🏠 ふたりのルールブック
-    </div>
-
-    <div class="status" id="status">
-      接続中...
-    </div>
-
-  </div>
-
-  <div class="container">
-
-    <!-- 家事 -->
-
-    <div class="section active" id="housework">
-
-      <div class="card">
-
-        <div class="card-title">
-          🍳 家事
-        </div>
-
-        <div class="toolbar">
-
-          <button onclick="insertText('houseworkText','【重要】')">
-            重要
-          </button>
-
-          <button onclick="insertText('houseworkText','・')">
-            リスト
-          </button>
-
-          <button onclick="wrapText('houseworkText','**','**')">
-            太字
-          </button>
-
-          <button onclick="wrapText('houseworkText','🔴','🔴')">
-            赤文字
-          </button>
-
-          <button onclick="undoText('houseworkText')">
-            戻る
-          </button>
-
-          <button onclick="createTable('houseworkTables')">
-            表作成
-          </button>
-
-        </div>
-
-        <textarea
-          id="houseworkText"
-          class="main-editor"
-        ></textarea>
-
-        <div
-          id="houseworkTables"
-          class="table-area"
-        ></div>
-
-      </div>
-
-    </div>
-
-    <!-- お金 -->
-
-    <div class="section" id="money">
-
-      <div class="card">
-
-        <div class="card-title">
-          💰 お金
-        </div>
-
-        <div class="toolbar">
-
-          <button onclick="insertText('moneyText','【重要】')">
-            重要
-          </button>
-
-          <button onclick="insertText('moneyText','・')">
-            リスト
-          </button>
-
-          <button onclick="wrapText('moneyText','**','**')">
-            太字
-          </button>
-
-          <button onclick="wrapText('moneyText','🔴','🔴')">
-            赤文字
-          </button>
-
-          <button onclick="undoText('moneyText')">
-            戻る
-          </button>
-
-          <button onclick="createTable('moneyTables')">
-            表作成
-          </button>
-
-        </div>
-
-        <textarea
-          id="moneyText"
-          class="main-editor"
-        ></textarea>
-
-        <div
-          id="moneyTables"
-          class="table-area"
-        ></div>
-
-      </div>
-
-    </div>
-
-    <!-- 未決定 -->
-
-    <div class="section" id="todo">
-
-      <div class="card">
-
-        <div class="card-title">
-          📝 未決定
-        </div>
-
-        <div class="toolbar">
-
-          <button onclick="insertText('todoText','【重要】')">
-            重要
-          </button>
-
-          <button onclick="insertText('todoText','・')">
-            リスト
-          </button>
-
-          <button onclick="wrapText('todoText','**','**')">
-            太字
-          </button>
-
-          <button onclick="wrapText('todoText','🔴','🔴')">
-            赤文字
-          </button>
-
-          <button onclick="undoText('todoText')">
-            戻る
-          </button>
-
-          <button onclick="createTable('todoTables')">
-            表作成
-          </button>
-
-        </div>
-
-        <textarea
-          id="todoText"
-          class="main-editor"
-        ></textarea>
-
-        <div
-          id="todoTables"
-          class="table-area"
-        ></div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <div class="bottom-nav">
-
-    <button
-      class="nav-btn active"
-      onclick="switchTab(this,'housework')"
-    >
-      家事
-    </button>
-
-    <button
-      class="nav-btn"
-      onclick="switchTab(this,'money')"
-    >
-      お金
-    </button>
-
-    <button
-      class="nav-btn"
-      onclick="switchTab(this,'todo')"
-    >
-      未決定
-    </button>
-
-  </div>
-
-  <script type="module">
-
-    import {
-      initializeApp
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-    import {
-      getFirestore,
-      doc,
-      setDoc,
-      onSnapshot
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    const firebaseConfig = {
-
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      projectId: "YOUR_PROJECT",
-      storageBucket: "YOUR_PROJECT.appspot.com",
-      messagingSenderId: "XXXX",
-      appId: "XXXX"
-
-    };
-
-    const app = initializeApp(firebaseConfig);
-
-    const db = getFirestore(app);
-
-    const status =
-      document.getElementById('status');
-
-    const undoHistory = {};
-
-    let userName =
-      localStorage.getItem('userName');
-
-    if(!userName){
-
-      userName =
-        prompt('名前を入力してください');
-
-      localStorage.setItem(
-        'userName',
-        userName
-      );
-
-    }
-
-    const ref =
-      doc(db,'rulebook','shared');
-
-    let saving = false;
-
-    onSnapshot(ref,(snapshot)=>{
-
-      const data = snapshot.data();
-
-      if(!data) return;
-
-      if(!saving){
-
-        document.getElementById(
-          'houseworkText'
-        ).value =
-          data.housework || '';
-
-        document.getElementById(
-          'moneyText'
-        ).value =
-          data.money || '';
-
-        document.getElementById(
-          'todoText'
-        ).value =
-          data.todo || '';
-
-      }
-
-      status.innerHTML =
-        `
-          最終編集：
-          ${data.updatedBy || '未設定'}
-          <br>
-          同期済み
-        `;
-
-    });
-
-    async function saveAll(){
-
-      saving = true;
-
-      status.innerHTML =
-        `
-          保存中...
-          <br>
-          編集者：
-          ${userName}
-        `;
-
-      await setDoc(ref,{
-
-        housework:
-          document.getElementById(
-            'houseworkText'
-          ).value,
-
-        money:
-          document.getElementById(
-            'moneyText'
-          ).value,
-
-        todo:
-          document.getElementById(
-            'todoText'
-          ).value,
-
-        updatedBy:userName,
-
-        updatedAt:new Date()
-
-      });
-
-      status.innerHTML =
-        `
-          保存済み
-          <br>
-          編集者：
-          ${userName}
-        `;
-
-      setTimeout(()=>{
-
-        saving = false;
-
-      },300);
-
-    }
-
-    document
-      .querySelectorAll('.main-editor')
-      .forEach((textarea)=>{
-
-        textarea.addEventListener(
-          'input',
-          ()=>{
-
-            saveAll();
-
-          }
-        );
-
-      });
-
-    window.switchTab =
-      function(el,id){
-
-        document
-          .querySelectorAll('.section')
-          .forEach((section)=>{
-
-            section.classList.remove(
-              'active'
-            );
-
-          });
-
-        document
-          .getElementById(id)
-          .classList.add('active');
-
-        document
-          .querySelectorAll('.nav-btn')
-          .forEach((btn)=>{
-
-            btn.classList.remove(
-              'active'
-            );
-
-          });
-
-        el.classList.add('active');
-
-      }
-
-    window.insertText =
-      function(id,text){
-
-        const textarea =
-          document.getElementById(id);
-
-        undoHistory[id] =
-          textarea.value;
-
-        const start =
-          textarea.selectionStart;
-
-        const end =
-          textarea.selectionEnd;
-
-        textarea.value =
-          textarea.value.substring(0,start)
-          + text
-          + textarea.value.substring(end);
-
-        saveAll();
-
-      }
-
-    window.wrapText =
-      function(id,before,after){
-
-        const textarea =
-          document.getElementById(id);
-
-        undoHistory[id] =
-          textarea.value;
-
-        const start =
-          textarea.selectionStart;
-
-        const end =
-          textarea.selectionEnd;
-
-        const selected =
-          textarea.value.substring(start,end);
-
-        let insertText = '';
-
-        if(before === '**'){
-
-          insertText =
-            '<b>' + selected + '</b>';
-
-        }else if(before === '🔴'){
-
-          insertText =
-            '<span style="color:#ff3b30;font-weight:bold;">'
-            + selected +
-            '</span>';
-
-        }
-
-        textarea.value =
-          textarea.value.substring(0,start)
-          + insertText
-          + textarea.value.substring(end);
-
-        saveAll();
-
-      }
-
-    window.undoText =
-      function(id){
-
-        const textarea =
-          document.getElementById(id);
-
-        if(undoHistory[id]){
-
-          textarea.value =
-            undoHistory[id];
-
-          saveAll();
-
-        }
-
-      }
-
-    window.createTable =
-      function(targetId){
-
-        const target =
-          document.getElementById(targetId);
-
-        const tableCard =
-          document.createElement('div');
-
-        tableCard.className =
-          'table-card';
-
-        tableCard.innerHTML =
-          `
-            <div class="table-top">
-
-              <strong>
-                表
-              </strong>
-
-              <div class="table-actions">
-
-                <button
-                  class="table-btn add-row-btn"
-                >
-                  行追加
-                </button>
-
-                <button
-                  class="table-btn delete-btn"
-                >
-                  表削除
-                </button>
-
-              </div>
-
-            </div>
-
-            <table class="rule-table">
-
-              <thead>
-
-                <tr>
-                  <th>担当</th>
-                  <th>内容</th>
-                </tr>
-
-              </thead>
-
-              <tbody>
-              </tbody>
-
-            </table>
-          `;
-
-        target.appendChild(tableCard);
-
-        const tbody =
-          tableCard.querySelector('tbody');
-
-        function addRow(){
-
-          const row =
-            document.createElement('tr');
-
-          row.innerHTML =
-            `
-              <td>
-                <textarea>自分</textarea>
-              </td>
-
-              <td>
-                <textarea>ここに入力</textarea>
-              </td>
-            `;
-
-          tbody.appendChild(row);
-
-        }
-
-        addRow();
-
-        tableCard
-          .querySelector('.add-row-btn')
-          .onclick = ()=>{
-
-            addRow();
-
-          };
-
-        tableCard
-          .querySelector('.delete-btn')
-          .onclick = ()=>{
-
-            const ok =
-              confirm('本当に表を削除しますか？');
-
-            if(ok){
-
-              tableCard.remove();
-
-            }
-
-          };
-
-      }
-
-  </script>
-
-</body>
-
-</html>      top:0;
-      z-index:999;
-      background:rgba(255,255,255,0.95);
-      backdrop-filter:blur(12px);
-      border-bottom:1px solid #eee;
-      padding:16px;
-    }
-
-    .header-title{
-      font-size:22px;
-      font-weight:bold;
-    }
-
-    .status{
-      margin-top:6px;
-      font-size:12px;
-      color:#666;
-      line-height:1.6;
-    }
-
-    .container{
-      padding:16px;
-    }
-
-    .section{
-      display:none;
-    }
-
-    .section.active{
-      display:block;
-    }
-
-    .card{
-      background:#fff;
-      border-radius:20px;
-      padding:18px;
-      margin-bottom:18px;
-      box-shadow:0 4px 12px rgba(0,0,0,0.06);
-    }
-
-    .card-title{
-      font-size:18px;
-      font-weight:bold;
-      margin-bottom:14px;
-    }
-
-    .toolbar{
-      display:flex;
-      gap:8px;
-      overflow-x:auto;
-      margin-bottom:14px;
-    }
-
-    .toolbar button{
-      border:none;
-      background:#eee;
-      border-radius:10px;
-      padding:10px 14px;
-      font-size:13px;
-      white-space:nowrap;
-    }
-
-    textarea.main-editor{
-      width:100%;
-      min-height:45vh;
-      border:none;
-      resize:vertical;
-      background:#f7f7f7;
-      border-radius:16px;
-      padding:16px;
-      font-size:16px;
-      line-height:1.9;
-      outline:none;
-      font-family:inherit;
+      margin-bottom:0;
     }
 
     .preview{
       margin-top:16px;
-      padding:16px;
       background:#fff;
+      border:1px solid #eee;
       border-radius:16px;
+      padding:16px;
       line-height:1.9;
       font-size:16px;
-      white-space:pre-wrap;
-      border:1px solid #eee;
+      word-break:break-word;
     }
 
-    .preview strong{
+    .preview b{
       font-weight:bold;
     }
 
@@ -1029,7 +275,7 @@
             太字
           </button>
 
-          <button onclick="wrapText('houseworkText','🔴','🔴')">
+          <button onclick="wrapText('houseworkText','!!','!!')">
             赤文字
           </button>
 
@@ -1086,7 +332,7 @@
             太字
           </button>
 
-          <button onclick="wrapText('moneyText','🔴','🔴')">
+          <button onclick="wrapText('moneyText','!!','!!')">
             赤文字
           </button>
 
@@ -1143,7 +389,7 @@
             太字
           </button>
 
-          <button onclick="wrapText('todoText','🔴','🔴')">
+          <button onclick="wrapText('todoText','!!','!!')">
             赤文字
           </button>
 
@@ -1236,6 +482,8 @@
 
     const undoHistory = {};
 
+    let isTyping = false;
+
     let userName =
       localStorage.getItem('userName');
 
@@ -1262,7 +510,7 @@
 
       if(!data) return;
 
-      if(!saving){
+      if(!saving && !isTyping){
 
         document.getElementById(
           'houseworkText'
@@ -1352,9 +600,20 @@
           'input',
           ()=>{
 
+            isTyping = true;
+
             renderPreview();
 
             saveAll();
+
+            clearTimeout(window.typingTimer);
+
+            window.typingTimer =
+              setTimeout(()=>{
+
+                isTyping = false;
+
+              },1000);
 
           }
         );
@@ -1367,13 +626,15 @@
 
         .replace(
           /\*\*(.*?)\*\*/g,
-          '<strong>$1</strong>'
+          '<b>$1</b>'
         )
 
         .replace(
-          /🔴(.*?)🔴/g,
+          /!!(.*?)!!/g,
           '<span class="red">$1</span>'
-        );
+        )
+
+        .replace(/\n/g,'<br>');
 
     }
 
