@@ -532,7 +532,7 @@
     messagingSenderId: "498316039733",
     appId: "1:498316039733:web:af9c61f7d012425e16037c"
   };
-
+  
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
@@ -692,11 +692,39 @@
       editor.focus();
     }
 
+    function insertStyledCaret(color,fontWeight){
+      const selection = window.getSelection();
+
+      if(!selection.rangeCount) return;
+
+      const range = selection.getRangeAt(0);
+
+      range.deleteContents();
+
+      const span = document.createElement('span');
+
+      span.style.color = color;
+      span.style.fontWeight = fontWeight;
+
+      const textNode = document.createTextNode('\u200B');
+
+      span.appendChild(textNode);
+
+      range.insertNode(span);
+
+      const newRange = document.createRange();
+
+      newRange.setStart(textNode,1);
+      newRange.setEnd(textNode,1);
+
+      selection.removeAllRanges();
+      selection.addRange(newRange);
+    }
+
     function resetTypingColorToBlack(){
-      document.execCommand(
-        'foreColor',
-        false,
-        '#333333'
+      insertStyledCaret(
+        '#333333',
+        'normal'
       );
     }
 
@@ -754,11 +782,26 @@
     window.redText = function(id){
       focusEditor(id);
 
-      document.execCommand(
-        'foreColor',
-        false,
-        '#ff3b30'
-      );
+      const selection = window.getSelection();
+
+      if(selection.rangeCount > 0 && !selection.isCollapsed){
+        document.execCommand(
+          'foreColor',
+          false,
+          '#ff3b30'
+        );
+
+        document.execCommand(
+          'bold',
+          false,
+          null
+        );
+      }else{
+        insertStyledCaret(
+          '#ff3b30',
+          'bold'
+        );
+      }
 
       markTyping();
       saveAll();
@@ -767,23 +810,26 @@
     window.blackText = function(id){
       focusEditor(id);
 
-      document.execCommand(
-        'foreColor',
-        false,
-        '#333333'
-      );
+      const selection = window.getSelection();
 
-      document.execCommand(
-        'removeFormat',
-        false,
-        null
-      );
+      if(selection.rangeCount > 0 && !selection.isCollapsed){
+        document.execCommand(
+          'removeFormat',
+          false,
+          null
+        );
 
-      document.execCommand(
-        'foreColor',
-        false,
-        '#333333'
-      );
+        document.execCommand(
+          'foreColor',
+          false,
+          '#333333'
+        );
+      }else{
+        insertStyledCaret(
+          '#333333',
+          'normal'
+        );
+      }
 
       markTyping();
       saveAll();
