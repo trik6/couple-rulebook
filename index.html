@@ -138,24 +138,60 @@
       font-weight:bold;
     }
 
+    .rule-table-wrap{
+      position:relative;
+      margin:14px 0;
+      overflow-x:auto;
+    }
+
+    .delete-table-btn{
+      position:absolute;
+      top:-10px;
+      right:-10px;
+      border:none;
+      background:#ff4d4f;
+      color:#fff;
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      font-size:14px;
+      font-weight:bold;
+    }
+
     .rule-table{
       width:100%;
       border-collapse:collapse;
-      margin-top:12px;
       background:#fff;
     }
 
     .rule-table th{
       background:#f0f0f0;
-      font-weight:bold;
     }
 
     .rule-table th,
     .rule-table td{
       border:1px solid #ddd;
-      padding:10px;
+      padding:12px;
+      min-width:120px;
+      vertical-align:top;
+    }
+
+    .rule-table td{
+      background:#fff;
+    }
+
+    .rule-table td textarea{
+      width:100%;
+      border:none;
+      resize:vertical;
+      background:transparent;
       font-size:14px;
-      text-align:left;
+      min-height:60px;
+      font-family:inherit;
+    }
+
+    .rule-table td textarea:focus{
+      outline:none;
     }
 
     b{
@@ -205,8 +241,12 @@
             赤文字
           </button>
 
-          <button onclick="insertTable()">
+          <button onclick="insertTable('houseworkText')">
             表追加
+          </button>
+
+          <button onclick="undoAction()">
+            戻る
           </button>
 
         </div>
@@ -241,8 +281,12 @@
             赤文字
           </button>
 
-          <button onclick="insertTable()">
+          <button onclick="insertTable('moneyText')">
             表追加
+          </button>
+
+          <button onclick="undoAction()">
+            戻る
           </button>
 
         </div>
@@ -277,8 +321,12 @@
             赤文字
           </button>
 
-          <button onclick="insertTable()">
+          <button onclick="insertTable('todoText')">
             表追加
+          </button>
+
+          <button onclick="undoAction()">
+            戻る
           </button>
 
         </div>
@@ -389,6 +437,8 @@
           同期済み
         `;
 
+      bindTableInputs();
+
     });
 
     async function autoSave(){
@@ -432,7 +482,23 @@
 
         isSaving = false;
 
-      },500);
+      },300);
+
+    }
+
+    function bindTableInputs(){
+
+      document
+        .querySelectorAll('.rule-table textarea')
+        .forEach((textarea)=>{
+
+          textarea.oninput = ()=>{
+
+            autoSave();
+
+          };
+
+        });
 
     }
 
@@ -482,6 +548,8 @@
         null
       );
 
+      autoSave();
+
     }
 
     window.redText = function(){
@@ -496,30 +564,69 @@
 
     }
 
-    window.insertTable = function(){
+    window.undoAction = function(){
 
-      const html = `
+      document.execCommand('undo');
+
+      autoSave();
+
+    }
+
+    window.insertTable = function(targetId){
+
+      const target =
+        document.getElementById(targetId);
+
+      const wrapper =
+        document.createElement('div');
+
+      wrapper.className =
+        'rule-table-wrap';
+
+      wrapper.innerHTML = `
+        <button
+          class="delete-table-btn"
+        >
+          ×
+        </button>
+
         <table class="rule-table">
+
           <tr>
             <th>担当</th>
             <th>内容</th>
           </tr>
 
           <tr>
-            <td>自分</td>
-            <td>ここに入力</td>
+            <td>
+              <textarea>
+自分
+              </textarea>
+            </td>
+
+            <td>
+              <textarea>
+ここに入力
+              </textarea>
+            </td>
           </tr>
 
         </table>
-
-        <br>
       `;
 
-      document.execCommand(
-        'insertHTML',
-        false,
-        html
-      );
+      wrapper
+        .querySelector('.delete-table-btn')
+        .onclick = ()=>{
+
+          wrapper.remove();
+
+          autoSave();
+
+        };
+
+      target.appendChild(wrapper);
+
+      bindTableInputs();
 
       autoSave();
 
