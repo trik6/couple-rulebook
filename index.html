@@ -13,6 +13,8 @@
 
   <link rel="manifest" href="manifest.json">
 
+  <link rel="apple-touch-icon" href="icon.png">
+
   <meta name="theme-color" content="#ffffff">
 
   <style>
@@ -35,6 +37,443 @@
       top:0;
       z-index:100;
       background:rgba(255,255,255,0.9);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid #eee;
+      padding:16px;
+    }
+
+    .header-title{
+      font-size:22px;
+      font-weight:bold;
+    }
+
+    .status{
+      margin-top:4px;
+      font-size:12px;
+      color:#666;
+    }
+
+    .container{
+      padding:16px;
+    }
+
+    .section{
+      display:none;
+    }
+
+    .section.active{
+      display:block;
+    }
+
+    .card{
+      background:#fff;
+      border-radius:20px;
+      padding:18px;
+      margin-bottom:16px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .card-title{
+      font-size:18px;
+      font-weight:bold;
+      margin-bottom:12px;
+    }
+
+    .editor-toolbar{
+      display:flex;
+      gap:8px;
+      margin-bottom:12px;
+      overflow-x:auto;
+    }
+
+    .editor-toolbar button{
+      border:none;
+      background:#eee;
+      border-radius:10px;
+      padding:10px 14px;
+      font-size:13px;
+      white-space:nowrap;
+    }
+
+    .editor{
+      min-height:70vh;
+      background:#f7f7f7;
+      border-radius:16px;
+      padding:16px;
+      font-size:16px;
+      line-height:1.8;
+      overflow:auto;
+    }
+
+    .editor:focus{
+      outline:none;
+    }
+
+    .bottom-nav{
+      position:fixed;
+      bottom:0;
+      left:0;
+      width:100%;
+      display:flex;
+      background:#fff;
+      border-top:1px solid #ddd;
+      padding-bottom:env(safe-area-inset-bottom);
+    }
+
+    .nav-btn{
+      flex:1;
+      border:none;
+      background:none;
+      padding:14px 0;
+      font-size:13px;
+      color:#666;
+    }
+
+    .nav-btn.active{
+      color:#000;
+      font-weight:bold;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:12px;
+    }
+
+    td,
+    th{
+      border:1px solid #ccc;
+      padding:8px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+
+    <div class="header-title">
+      🏠 ふたりのルールブック
+    </div>
+
+    <div class="status" id="status">
+      接続中...
+    </div>
+
+  </div>
+
+  <div class="container">
+
+    <div class="section active" id="housework">
+
+      <div class="card">
+
+        <div class="card-title">
+          🍳 家事
+        </div>
+
+        <div class="editor-toolbar">
+
+          <button onclick="format('bold')">
+            太字
+          </button>
+
+          <button onclick="redText()">
+            赤文字
+          </button>
+
+          <button onclick="format('insertUnorderedList')">
+            ・リスト
+          </button>
+
+          <button onclick="insertTable()">
+            表
+          </button>
+
+        </div>
+
+        <div
+          id="houseworkText"
+          class="editor"
+          contenteditable="true"
+        ></div>
+
+      </div>
+
+    </div>
+
+    <div class="section" id="money">
+
+      <div class="card">
+
+        <div class="card-title">
+          💰 お金
+        </div>
+
+        <div class="editor-toolbar">
+
+          <button onclick="format('bold')">
+            太字
+          </button>
+
+          <button onclick="redText()">
+            赤文字
+          </button>
+
+          <button onclick="format('insertUnorderedList')">
+            ・リスト
+          </button>
+
+          <button onclick="insertTable()">
+            表
+          </button>
+
+        </div>
+
+        <div
+          id="moneyText"
+          class="editor"
+          contenteditable="true"
+        ></div>
+
+      </div>
+
+    </div>
+
+    <div class="section" id="todo">
+
+      <div class="card">
+
+        <div class="card-title">
+          📝 未決定
+        </div>
+
+        <div class="editor-toolbar">
+
+          <button onclick="format('bold')">
+            太字
+          </button>
+
+          <button onclick="redText()">
+            赤文字
+          </button>
+
+          <button onclick="format('insertUnorderedList')">
+            ・リスト
+          </button>
+
+          <button onclick="insertTable()">
+            表
+          </button>
+
+        </div>
+
+        <div
+          id="todoText"
+          class="editor"
+          contenteditable="true"
+        ></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="bottom-nav">
+
+    <button
+      class="nav-btn active"
+      onclick="switchTab(this,'housework')"
+    >
+      家事
+    </button>
+
+    <button
+      class="nav-btn"
+      onclick="switchTab(this,'money')"
+    >
+      お金
+    </button>
+
+    <button
+      class="nav-btn"
+      onclick="switchTab(this,'todo')"
+    >
+      未決定
+    </button>
+
+  </div>
+
+  <script type="module">
+
+    import {
+      initializeApp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      onSnapshot
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCmMC0UXaAhlGpEZmyOGsqjkkfX0I_eoJE",
+      authDomain: "couple-rulebook.firebaseapp.com",
+      projectId: "couple-rulebook",
+      storageBucket: "couple-rulebook.firebasestorage.app",
+      messagingSenderId: "498316039733",
+      appId: "1:498316039733:web:af9c61f7d012425e16037c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+
+    const db = getFirestore(app);
+
+    const status = document.getElementById('status');
+
+    let userName = localStorage.getItem('userName');
+
+    if(!userName){
+
+      userName = prompt('名前を入力してください');
+
+      localStorage.setItem('userName',userName);
+
+    }
+
+    const ref = doc(db,'rulebook','shared');
+
+    onSnapshot(ref,(snapshot)=>{
+
+      const data = snapshot.data();
+
+      if(!data) return;
+
+      document.getElementById('houseworkText').innerHTML =
+        data.housework || '';
+
+      document.getElementById('moneyText').innerHTML =
+        data.money || '';
+
+      document.getElementById('todoText').innerHTML =
+        data.todo || '';
+
+      status.innerText =
+        '最終編集：' +
+        (data.updatedBy || '');
+
+    });
+
+    async function autoSave(){
+
+      status.innerText = '保存中...';
+
+      await setDoc(ref,{
+
+        housework:
+          document.getElementById('houseworkText').innerHTML,
+
+        money:
+          document.getElementById('moneyText').innerHTML,
+
+        todo:
+          document.getElementById('todoText').innerHTML,
+
+        updatedBy:userName,
+
+        updatedAt:new Date()
+
+      });
+
+      status.innerText = '保存済み';
+
+    }
+
+    document
+      .querySelectorAll('.editor')
+      .forEach((editor)=>{
+
+        editor.addEventListener('input',()=>{
+
+          autoSave();
+
+        });
+
+      });
+
+    window.switchTab = function(el,id){
+
+      document
+        .querySelectorAll('.section')
+        .forEach((section)=>{
+
+          section.classList.remove('active');
+
+        });
+
+      document
+        .getElementById(id)
+        .classList.add('active');
+
+      document
+        .querySelectorAll('.nav-btn')
+        .forEach((btn)=>{
+
+          btn.classList.remove('active');
+
+        });
+
+      el.classList.add('active');
+
+    }
+
+    window.format = function(command){
+
+      document.execCommand(command,false,null);
+
+    }
+
+    window.redText = function(){
+
+      document.execCommand(
+        'foreColor',
+        false,
+        'red'
+      );
+
+    }
+
+    window.insertTable = function(){
+
+      const table = `
+        <table>
+          <tr>
+            <th>担当</th>
+            <th>内容</th>
+          </tr>
+          <tr>
+            <td>自分</td>
+            <td></td>
+          </tr>
+        </table>
+      `;
+
+      document.execCommand(
+        'insertHTML',
+        false,
+        table
+      );
+
+    }
+
+  </script>
+
+</body>
+
+</html>      background:rgba(255,255,255,0.9);
       backdrop-filter:blur(10px);
       border-bottom:1px solid #eee;
       padding:16px;
