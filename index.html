@@ -72,10 +72,32 @@
       box-shadow:0 4px 12px rgba(0,0,0,0.06);
     }
 
+    .card-heading{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:14px;
+    }
+
     .card-title{
       font-size:18px;
       font-weight:bold;
-      margin-bottom:14px;
+    }
+
+    .undo-icon-btn{
+      width:34px;
+      height:34px;
+      border:none;
+      border-radius:50%;
+      background:#f0f0f0;
+      color:#333;
+      font-size:20px;
+      line-height:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
     }
 
     .toolbar{
@@ -189,6 +211,7 @@
     .rule-table{
       width:100%;
       border-collapse:collapse;
+      table-layout:fixed;
     }
 
     .rule-table th{
@@ -201,7 +224,27 @@
       border:1px solid #ddd;
       padding:10px;
       vertical-align:top;
-      min-width:110px;
+    }
+
+    .rule-table th:nth-child(1),
+    .rule-table td:nth-child(1){
+      width:34%;
+    }
+
+    .rule-table th:nth-child(2),
+    .rule-table td:nth-child(2){
+      width:auto;
+    }
+
+    .rule-table th.row-delete-cell,
+    .rule-table td.row-delete-cell{
+      width:52px;
+      min-width:52px;
+      max-width:52px;
+      padding:4px !important;
+      text-align:center;
+      vertical-align:middle;
+      white-space:nowrap;
     }
 
     .rule-table textarea{
@@ -221,24 +264,13 @@
       color:#aaa;
     }
 
-    .row-delete-cell{
-      width:1%;
-      min-width:42px;
-      max-width:42px;
-      padding:4px !important;
-      text-align:center;
-      vertical-align:middle;
-      white-space:nowrap;
-    }
-
     .row-delete-btn{
       border:none;
       background:#eee;
       color:#666;
-      border-radius:6px;
-      padding:6px 4px;
-      font-size:10px;
-      line-height:1.2;
+      border-radius:8px;
+      padding:8px 10px;
+      font-size:12px;
       white-space:nowrap;
     }
 
@@ -286,8 +318,19 @@
 
     <div class="section active" id="housework">
       <div class="card">
-        <div class="card-title">
-          🍳 家事
+
+        <div class="card-heading">
+          <div class="card-title">
+            🍳 家事
+          </div>
+
+          <button
+            class="undo-icon-btn"
+            onclick="undoEditor('houseworkText')"
+            aria-label="戻る"
+          >
+            ↶
+          </button>
         </div>
 
         <div class="toolbar">
@@ -315,10 +358,6 @@
             黒文字
           </button>
 
-          <button onclick="undoAction()">
-            戻る
-          </button>
-
           <button onclick="createTable('housework')">
             表作成
           </button>
@@ -339,8 +378,19 @@
 
     <div class="section" id="money">
       <div class="card">
-        <div class="card-title">
-          💰 お金
+
+        <div class="card-heading">
+          <div class="card-title">
+            💰 お金
+          </div>
+
+          <button
+            class="undo-icon-btn"
+            onclick="undoEditor('moneyText')"
+            aria-label="戻る"
+          >
+            ↶
+          </button>
         </div>
 
         <div class="toolbar">
@@ -368,10 +418,6 @@
             黒文字
           </button>
 
-          <button onclick="undoAction()">
-            戻る
-          </button>
-
           <button onclick="createTable('money')">
             表作成
           </button>
@@ -392,8 +438,19 @@
 
     <div class="section" id="todo">
       <div class="card">
-        <div class="card-title">
-          📝 未決定
+
+        <div class="card-heading">
+          <div class="card-title">
+            📝 未決定
+          </div>
+
+          <button
+            class="undo-icon-btn"
+            onclick="undoEditor('todoText')"
+            aria-label="戻る"
+          >
+            ↶
+          </button>
         </div>
 
         <div class="toolbar">
@@ -419,10 +476,6 @@
 
           <button onclick="blackText('todoText')">
             黒文字
-          </button>
-
-          <button onclick="undoAction()">
-            戻る
           </button>
 
           <button onclick="createTable('todo')">
@@ -746,7 +799,9 @@
       saveAll();
     }
 
-    window.undoAction = function(){
+    window.undoEditor = function(id){
+      focusEditor(id);
+
       document.execCommand(
         'undo',
         false,
