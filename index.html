@@ -36,7 +36,7 @@
       position:sticky;
       top:0;
       z-index:100;
-      background:rgba(255,255,255,0.9);
+      background:rgba(255,255,255,0.95);
       backdrop-filter:blur(10px);
       border-bottom:1px solid #eee;
       padding:16px;
@@ -48,9 +48,10 @@
     }
 
     .status{
-      margin-top:4px;
+      margin-top:6px;
       font-size:12px;
       color:#666;
+      line-height:1.6;
     }
 
     .container{
@@ -76,13 +77,13 @@
     .card-title{
       font-size:18px;
       font-weight:bold;
-      margin-bottom:12px;
+      margin-bottom:14px;
     }
 
     .editor-toolbar{
       display:flex;
       gap:8px;
-      margin-bottom:12px;
+      margin-bottom:14px;
       overflow-x:auto;
     }
 
@@ -96,14 +97,15 @@
     }
 
     .editor{
-      min-height:calc(100vh - 260px);
-      max-height:calc(100vh - 260px);
+      min-height:calc(100vh - 320px);
       background:#f7f7f7;
       border-radius:16px;
       padding:16px;
       font-size:16px;
-      line-height:1.8;
+      line-height:1.9;
       overflow-y:auto;
+      white-space:pre-wrap;
+      word-break:break-word;
     }
 
     .editor:focus{
@@ -136,16 +138,32 @@
       font-weight:bold;
     }
 
-    table{
+    .rule-table{
       width:100%;
       border-collapse:collapse;
       margin-top:12px;
+      background:#fff;
     }
 
-    td,
-    th{
-      border:1px solid #ccc;
-      padding:8px;
+    .rule-table th{
+      background:#f0f0f0;
+      font-weight:bold;
+    }
+
+    .rule-table th,
+    .rule-table td{
+      border:1px solid #ddd;
+      padding:10px;
+      font-size:14px;
+      text-align:left;
+    }
+
+    b{
+      font-weight:bold;
+    }
+
+    font[color="red"]{
+      color:red;
     }
 
   </style>
@@ -167,6 +185,8 @@
 
   <div class="container">
 
+    <!-- 家事 -->
+
     <div class="section active" id="housework">
 
       <div class="card">
@@ -185,12 +205,8 @@
             赤文字
           </button>
 
-          <button onclick="format('insertUnorderedList')">
-            ・リスト
-          </button>
-
           <button onclick="insertTable()">
-            表
+            表追加
           </button>
 
         </div>
@@ -204,6 +220,8 @@
       </div>
 
     </div>
+
+    <!-- お金 -->
 
     <div class="section" id="money">
 
@@ -223,12 +241,8 @@
             赤文字
           </button>
 
-          <button onclick="format('insertUnorderedList')">
-            ・リスト
-          </button>
-
           <button onclick="insertTable()">
-            表
+            表追加
           </button>
 
         </div>
@@ -242,6 +256,8 @@
       </div>
 
     </div>
+
+    <!-- 未決定 -->
 
     <div class="section" id="todo">
 
@@ -261,12 +277,8 @@
             赤文字
           </button>
 
-          <button onclick="format('insertUnorderedList')">
-            ・リスト
-          </button>
-
           <button onclick="insertTable()">
-            表
+            表追加
           </button>
 
         </div>
@@ -348,30 +360,48 @@
 
     const ref = doc(db,'rulebook','shared');
 
+    let isSaving = false;
+
     onSnapshot(ref,(snapshot)=>{
 
       const data = snapshot.data();
 
       if(!data) return;
 
-      document.getElementById('houseworkText').innerHTML =
-        data.housework || '';
+      if(!isSaving){
 
-      document.getElementById('moneyText').innerHTML =
-        data.money || '';
+        document.getElementById('houseworkText').innerHTML =
+          data.housework || '';
 
-      document.getElementById('todoText').innerHTML =
-        data.todo || '';
+        document.getElementById('moneyText').innerHTML =
+          data.money || '';
 
-      status.innerText =
-        '最終編集：' +
-        (data.updatedBy || '');
+        document.getElementById('todoText').innerHTML =
+          data.todo || '';
+
+      }
+
+      status.innerHTML =
+        `
+          最終編集：
+          ${data.updatedBy || '未設定'}
+          <br>
+          同期済み
+        `;
 
     });
 
     async function autoSave(){
 
-      status.innerText = '保存中...';
+      isSaving = true;
+
+      status.innerHTML =
+        `
+          保存中...
+          <br>
+          編集者：
+          ${userName}
+        `;
 
       await setDoc(ref,{
 
@@ -390,7 +420,19 @@
 
       });
 
-      status.innerText = '保存済み';
+      status.innerHTML =
+        `
+          保存済み
+          <br>
+          編集者：
+          ${userName}
+        `;
+
+      setTimeout(()=>{
+
+        isSaving = false;
+
+      },500);
 
     }
 
@@ -434,7 +476,11 @@
 
     window.format = function(command){
 
-      document.execCommand(command,false,null);
+      document.execCommand(
+        command,
+        false,
+        null
+      );
 
     }
 
@@ -446,28 +492,36 @@
         'red'
       );
 
+      autoSave();
+
     }
 
     window.insertTable = function(){
 
-      const table = `
-        <table>
+      const html = `
+        <table class="rule-table">
           <tr>
             <th>担当</th>
             <th>内容</th>
           </tr>
+
           <tr>
             <td>自分</td>
-            <td></td>
+            <td>ここに入力</td>
           </tr>
+
         </table>
+
+        <br>
       `;
 
       document.execCommand(
         'insertHTML',
         false,
-        table
+        html
       );
+
+      autoSave();
 
     }
 
