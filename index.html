@@ -124,6 +124,11 @@
       font-weight:bold;
     }
 
+    .main-editor .black{
+      color:#333;
+      font-weight:normal;
+    }
+
     .table-area{
       margin-top:18px;
     }
@@ -217,19 +222,23 @@
     }
 
     .row-delete-cell{
-      width:72px;
-      min-width:72px;
+      width:1%;
+      min-width:42px;
+      max-width:42px;
+      padding:4px !important;
       text-align:center;
       vertical-align:middle;
+      white-space:nowrap;
     }
 
     .row-delete-btn{
       border:none;
       background:#eee;
       color:#666;
-      border-radius:8px;
-      padding:8px 10px;
-      font-size:12px;
+      border-radius:6px;
+      padding:6px 4px;
+      font-size:10px;
+      line-height:1.2;
       white-space:nowrap;
     }
 
@@ -302,6 +311,10 @@
             赤文字
           </button>
 
+          <button onclick="blackText('houseworkText')">
+            黒文字
+          </button>
+
           <button onclick="undoAction()">
             戻る
           </button>
@@ -351,6 +364,10 @@
             赤文字
           </button>
 
+          <button onclick="blackText('moneyText')">
+            黒文字
+          </button>
+
           <button onclick="undoAction()">
             戻る
           </button>
@@ -398,6 +415,10 @@
 
           <button onclick="redText('todoText')">
             赤文字
+          </button>
+
+          <button onclick="blackText('todoText')">
+            黒文字
           </button>
 
           <button onclick="undoAction()">
@@ -646,6 +667,12 @@
       );
 
       document.execCommand(
+        'foreColor',
+        false,
+        '#333333'
+      );
+
+      document.execCommand(
         'bold',
         false,
         false
@@ -680,6 +707,38 @@
           'foreColor',
           false,
           '#ff3b30'
+        );
+      }
+
+      markTyping();
+      saveAll();
+    }
+
+    window.blackText = function(id){
+      focusEditor(id);
+
+      const selection = window.getSelection();
+
+      if(selection.rangeCount > 0 && !selection.isCollapsed){
+        const range = selection.getRangeAt(0);
+        const span = document.createElement('span');
+
+        span.className = 'black';
+
+        try{
+          range.surroundContents(span);
+        }catch(error){
+          document.execCommand(
+            'foreColor',
+            false,
+            '#333333'
+          );
+        }
+      }else{
+        document.execCommand(
+          'foreColor',
+          false,
+          '#333333'
         );
       }
 
@@ -786,7 +845,7 @@
 
               <td class="row-delete-cell">
                 <button class="row-delete-btn">
-                  行削除
+                  削除
                 </button>
               </td>
             `;
