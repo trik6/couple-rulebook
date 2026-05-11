@@ -27,7 +27,7 @@
       background:#f5f5f7;
       color:#333;
       font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-      padding-bottom:160px;
+      padding-bottom:170px;
     }
 
     .header{
@@ -140,14 +140,26 @@
       display:flex;
       justify-content:space-between;
       align-items:center;
+      gap:10px;
       padding:10px;
       background:#f7f7f7;
       border-bottom:1px solid #eee;
     }
 
+    .table-title-input{
+      width:100%;
+      border:none;
+      background:transparent;
+      font-size:16px;
+      font-weight:bold;
+      outline:none;
+      font-family:inherit;
+    }
+
     .table-actions{
       display:flex;
       gap:8px;
+      flex-shrink:0;
     }
 
     .table-btn{
@@ -156,6 +168,7 @@
       padding:10px 14px;
       font-size:12px;
       font-weight:bold;
+      white-space:nowrap;
     }
 
     .add-row-btn{
@@ -175,6 +188,7 @@
 
     .rule-table th{
       background:#f0f0f0;
+      font-size:13px;
     }
 
     .rule-table th,
@@ -195,6 +209,11 @@
       background:transparent;
       outline:none;
       display:block;
+      line-height:1.6;
+    }
+
+    .rule-table textarea::placeholder{
+      color:#aaa;
     }
 
     .bottom-nav{
@@ -239,17 +258,42 @@
 
   <div class="container">
 
+    <!-- 家事 -->
+
     <div class="section active" id="housework">
       <div class="card">
-        <div class="card-title">🍳 家事</div>
+        <div class="card-title">
+          🍳 家事
+        </div>
 
         <div class="toolbar">
-          <button onclick="insertText('houseworkText','【重要】')">重要</button>
-          <button onclick="insertText('houseworkText','・')">リスト</button>
-          <button onclick="boldText('houseworkText')">太字</button>
-          <button onclick="redText('houseworkText')">赤文字</button>
-          <button onclick="undoAction()">戻る</button>
-          <button onclick="createTable('housework')">表作成</button>
+          <button onclick="insertText('houseworkText','【重要】')">
+            重要
+          </button>
+
+          <button onclick="insertText('houseworkText','・')">
+            リスト
+          </button>
+
+          <button onclick="boldText('houseworkText')">
+            太字
+          </button>
+
+          <button onclick="normalText('houseworkText')">
+            細字
+          </button>
+
+          <button onclick="redText('houseworkText')">
+            赤文字
+          </button>
+
+          <button onclick="undoAction()">
+            戻る
+          </button>
+
+          <button onclick="createTable('housework')">
+            表作成
+          </button>
         </div>
 
         <div
@@ -265,17 +309,42 @@
       </div>
     </div>
 
+    <!-- お金 -->
+
     <div class="section" id="money">
       <div class="card">
-        <div class="card-title">💰 お金</div>
+        <div class="card-title">
+          💰 お金
+        </div>
 
         <div class="toolbar">
-          <button onclick="insertText('moneyText','【重要】')">重要</button>
-          <button onclick="insertText('moneyText','・')">リスト</button>
-          <button onclick="boldText('moneyText')">太字</button>
-          <button onclick="redText('moneyText')">赤文字</button>
-          <button onclick="undoAction()">戻る</button>
-          <button onclick="createTable('money')">表作成</button>
+          <button onclick="insertText('moneyText','【重要】')">
+            重要
+          </button>
+
+          <button onclick="insertText('moneyText','・')">
+            リスト
+          </button>
+
+          <button onclick="boldText('moneyText')">
+            太字
+          </button>
+
+          <button onclick="normalText('moneyText')">
+            細字
+          </button>
+
+          <button onclick="redText('moneyText')">
+            赤文字
+          </button>
+
+          <button onclick="undoAction()">
+            戻る
+          </button>
+
+          <button onclick="createTable('money')">
+            表作成
+          </button>
         </div>
 
         <div
@@ -291,17 +360,42 @@
       </div>
     </div>
 
+    <!-- 未決定 -->
+
     <div class="section" id="todo">
       <div class="card">
-        <div class="card-title">📝 未決定</div>
+        <div class="card-title">
+          📝 未決定
+        </div>
 
         <div class="toolbar">
-          <button onclick="insertText('todoText','【重要】')">重要</button>
-          <button onclick="insertText('todoText','・')">リスト</button>
-          <button onclick="boldText('todoText')">太字</button>
-          <button onclick="redText('todoText')">赤文字</button>
-          <button onclick="undoAction()">戻る</button>
-          <button onclick="createTable('todo')">表作成</button>
+          <button onclick="insertText('todoText','【重要】')">
+            重要
+          </button>
+
+          <button onclick="insertText('todoText','・')">
+            リスト
+          </button>
+
+          <button onclick="boldText('todoText')">
+            太字
+          </button>
+
+          <button onclick="normalText('todoText')">
+            細字
+          </button>
+
+          <button onclick="redText('todoText')">
+            赤文字
+          </button>
+
+          <button onclick="undoAction()">
+            戻る
+          </button>
+
+          <button onclick="createTable('todo')">
+            表作成
+          </button>
         </div>
 
         <div
@@ -345,14 +439,14 @@
       onSnapshot
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      projectId: "YOUR_PROJECT",
-      storageBucket: "YOUR_PROJECT.appspot.com",
-      messagingSenderId: "XXXX",
-      appId: "XXXX"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyCmMC0UXaAhlGpEZmyOGsqjkkfX0I_eoJE",
+    authDomain: "couple-rulebook.firebaseapp.com",
+    projectId: "couple-rulebook",
+    storageBucket: "couple-rulebook.firebasestorage.app",
+    messagingSenderId: "498316039733",
+    appId: "1:498316039733:web:af9c61f7d012425e16037c"
+  };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
@@ -392,9 +486,17 @@
         document.getElementById('todoText').innerHTML =
           data.todo || '';
 
-        tableData.housework = data.houseworkTables || [];
-        tableData.money = data.moneyTables || [];
-        tableData.todo = data.todoTables || [];
+        tableData.housework = Array.isArray(data.houseworkTables)
+          ? data.houseworkTables
+          : [];
+
+        tableData.money = Array.isArray(data.moneyTables)
+          ? data.moneyTables
+          : [];
+
+        tableData.todo = Array.isArray(data.todoTables)
+          ? data.todoTables
+          : [];
 
         renderTables('housework');
         renderTables('money');
@@ -416,7 +518,20 @@
 
       window.typingTimer = setTimeout(()=>{
         isTyping = false;
-      },1000);
+      },1200);
+    }
+
+    function getCurrentData(){
+      return {
+        housework:document.getElementById('houseworkText').innerHTML,
+        money:document.getElementById('moneyText').innerHTML,
+        todo:document.getElementById('todoText').innerHTML,
+        houseworkTables:tableData.housework,
+        moneyTables:tableData.money,
+        todoTables:tableData.todo,
+        updatedBy:userName,
+        updatedAt:new Date()
+      };
     }
 
     async function saveAll(){
@@ -432,28 +547,30 @@
             編集者：${userName}
           `;
 
-        await setDoc(ref,{
-          housework:document.getElementById('houseworkText').innerHTML,
-          money:document.getElementById('moneyText').innerHTML,
-          todo:document.getElementById('todoText').innerHTML,
-          houseworkTables:tableData.housework,
-          moneyTables:tableData.money,
-          todoTables:tableData.todo,
-          updatedBy:userName,
-          updatedAt:new Date()
-        });
+        try{
+          await setDoc(ref,getCurrentData());
 
-        status.innerHTML =
-          `
-            保存済み
-            <br>
-            編集者：${userName}
-          `;
+          status.innerHTML =
+            `
+              保存済み
+              <br>
+              編集者：${userName}
+            `;
+        }catch(error){
+          console.error(error);
+
+          status.innerHTML =
+            `
+              保存エラー
+              <br>
+              Firebase設定またはRulesを確認してください
+            `;
+        }
 
         setTimeout(()=>{
           isSaving = false;
-        },500);
-      },400);
+        },700);
+      },500);
     }
 
     document.querySelectorAll('.main-editor').forEach((editor)=>{
@@ -484,14 +601,45 @@
 
     window.insertText = function(id,text){
       focusEditor(id);
-      document.execCommand('insertText',false,text);
+
+      document.execCommand(
+        'insertText',
+        false,
+        text
+      );
+
       markTyping();
       saveAll();
     }
 
     window.boldText = function(id){
       focusEditor(id);
-      document.execCommand('bold',false,null);
+
+      document.execCommand(
+        'bold',
+        false,
+        null
+      );
+
+      markTyping();
+      saveAll();
+    }
+
+    window.normalText = function(id){
+      focusEditor(id);
+
+      document.execCommand(
+        'removeFormat',
+        false,
+        null
+      );
+
+      document.execCommand(
+        'bold',
+        false,
+        false
+      );
+
       markTyping();
       saveAll();
     }
@@ -509,11 +657,19 @@
 
         try{
           range.surroundContents(span);
-        }catch(e){
-          document.execCommand('foreColor',false,'#ff3b30');
+        }catch(error){
+          document.execCommand(
+            'foreColor',
+            false,
+            '#ff3b30'
+          );
         }
       }else{
-        document.execCommand('foreColor',false,'#ff3b30');
+        document.execCommand(
+          'foreColor',
+          false,
+          '#ff3b30'
+        );
       }
 
       markTyping();
@@ -521,22 +677,29 @@
     }
 
     window.undoAction = function(){
-      document.execCommand('undo',false,null);
+      document.execCommand(
+        'undo',
+        false,
+        null
+      );
+
       markTyping();
       saveAll();
     }
 
     window.createTable = function(section){
       tableData[section].push({
+        title:'',
         rows:[
           {
-            person:'自分',
-            content:'ここに入力'
+            person:'',
+            content:''
           }
         ]
       });
 
       renderTables(section);
+      markTyping();
       saveAll();
     }
 
@@ -553,7 +716,12 @@
         tableCard.innerHTML =
           `
             <div class="table-top">
-              <strong>表</strong>
+              <input
+                class="table-title-input"
+                type="text"
+                placeholder="表タイトル"
+                value="${escapeHtml(table.title || '')}"
+              >
 
               <div class="table-actions">
                 <button class="table-btn add-row-btn">
@@ -578,6 +746,17 @@
             </table>
           `;
 
+        const titleInput =
+          tableCard.querySelector('.table-title-input');
+
+        titleInput.addEventListener('input',()=>{
+          tableData[section][tableIndex].title =
+            titleInput.value;
+
+          markTyping();
+          saveAll();
+        });
+
         const tbody = tableCard.querySelector('tbody');
 
         table.rows.forEach((row,rowIndex)=>{
@@ -586,20 +765,24 @@
           tr.innerHTML =
             `
               <td>
-                <textarea>${row.person || ''}</textarea>
+                <textarea placeholder="担当者"></textarea>
               </td>
 
               <td>
-                <textarea>${row.content || ''}</textarea>
+                <textarea placeholder="内容"></textarea>
               </td>
             `;
 
           const textareas = tr.querySelectorAll('textarea');
 
+          textareas[0].value = row.person || '';
+          textareas[1].value = row.content || '';
+
           textareas[0].addEventListener('input',()=>{
             tableData[section][tableIndex].rows[rowIndex].person =
               textareas[0].value;
 
+            markTyping();
             saveAll();
           });
 
@@ -607,6 +790,7 @@
             tableData[section][tableIndex].rows[rowIndex].content =
               textareas[1].value;
 
+            markTyping();
             saveAll();
           });
 
@@ -615,11 +799,12 @@
 
         tableCard.querySelector('.add-row-btn').onclick = ()=>{
           tableData[section][tableIndex].rows.push({
-            person:'自分',
-            content:'ここに入力'
+            person:'',
+            content:''
           });
 
           renderTables(section);
+          markTyping();
           saveAll();
         };
 
@@ -629,12 +814,22 @@
           if(ok){
             tableData[section].splice(tableIndex,1);
             renderTables(section);
+            markTyping();
             saveAll();
           }
         };
 
         target.appendChild(tableCard);
       });
+    }
+
+    function escapeHtml(text){
+      return String(text)
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;');
     }
   </script>
 
