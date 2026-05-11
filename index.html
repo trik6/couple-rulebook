@@ -139,6 +139,618 @@
     }
 
     .rule-table-wrap{
+      margin:14px 0;
+      border:1px solid #ddd;
+      border-radius:14px;
+      overflow:hidden;
+      background:#fff;
+    }
+
+    .table-header{
+      display:flex;
+      justify-content:flex-end;
+      padding:8px;
+      background:#f7f7f7;
+      border-bottom:1px solid #eee;
+    }
+
+    .delete-table-btn{
+      border:none;
+      background:#ff4d4f;
+      color:#fff;
+      border-radius:8px;
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:bold;
+    }
+
+    .rule-table{
+      width:100%;
+      border-collapse:collapse;
+      background:#fff;
+    }
+
+    .rule-table th{
+      background:#f0f0f0;
+    }
+
+    .rule-table th,
+    .rule-table td{
+      border:1px solid #ddd;
+      padding:12px;
+      min-width:120px;
+      vertical-align:top;
+    }
+
+    .rule-table td{
+      background:#fff;
+    }
+
+    .rule-table td textarea{
+      width:100%;
+      border:none;
+      resize:vertical;
+      background:transparent;
+      font-size:14px;
+      min-height:60px;
+      font-family:inherit;
+    }
+
+    .rule-table td textarea:focus{
+      outline:none;
+    }
+
+    b{
+      font-weight:bold;
+    }
+
+    font[color="red"]{
+      color:red;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+
+    <div class="header-title">
+      🏠 ふたりのルールブック
+    </div>
+
+    <div class="status" id="status">
+      接続中...
+    </div>
+
+  </div>
+
+  <div class="container">
+
+    <!-- 家事 -->
+
+    <div class="section active" id="housework">
+
+      <div class="card">
+
+        <div class="card-title">
+          🍳 家事
+        </div>
+
+        <div class="editor-toolbar">
+
+          <button onclick="format('bold')">
+            太字
+          </button>
+
+          <button onclick="redText()">
+            赤文字
+          </button>
+
+          <button onclick="insertTable('houseworkText')">
+            表追加
+          </button>
+
+          <button onclick="undoAction()">
+            戻る
+          </button>
+
+        </div>
+
+        <div
+          id="houseworkText"
+          class="editor"
+          contenteditable="true"
+        ></div>
+
+      </div>
+
+    </div>
+
+    <!-- お金 -->
+
+    <div class="section" id="money">
+
+      <div class="card">
+
+        <div class="card-title">
+          💰 お金
+        </div>
+
+        <div class="editor-toolbar">
+
+          <button onclick="format('bold')">
+            太字
+          </button>
+
+          <button onclick="redText()">
+            赤文字
+          </button>
+
+          <button onclick="insertTable('moneyText')">
+            表追加
+          </button>
+
+          <button onclick="undoAction()">
+            戻る
+          </button>
+
+        </div>
+
+        <div
+          id="moneyText"
+          class="editor"
+          contenteditable="true"
+        ></div>
+
+      </div>
+
+    </div>
+
+    <!-- 未決定 -->
+
+    <div class="section" id="todo">
+
+      <div class="card">
+
+        <div class="card-title">
+          📝 未決定
+        </div>
+
+        <div class="editor-toolbar">
+
+          <button onclick="format('bold')">
+            太字
+          </button>
+
+          <button onclick="redText()">
+            赤文字
+          </button>
+
+          <button onclick="insertTable('todoText')">
+            表追加
+          </button>
+
+          <button onclick="undoAction()">
+            戻る
+          </button>
+
+        </div>
+
+        <div
+          id="todoText"
+          class="editor"
+          contenteditable="true"
+        ></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="bottom-nav">
+
+    <button
+      class="nav-btn active"
+      onclick="switchTab(this,'housework')"
+    >
+      家事
+    </button>
+
+    <button
+      class="nav-btn"
+      onclick="switchTab(this,'money')"
+    >
+      お金
+    </button>
+
+    <button
+      class="nav-btn"
+      onclick="switchTab(this,'todo')"
+    >
+      未決定
+    </button>
+
+  </div>
+
+  <script type="module">
+
+    import {
+      initializeApp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      onSnapshot
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCmMC0UXaAhlGpEZmyOGsqjkkfX0I_eoJE",
+      authDomain: "couple-rulebook.firebaseapp.com",
+      projectId: "couple-rulebook",
+      storageBucket: "couple-rulebook.firebasestorage.app",
+      messagingSenderId: "498316039733",
+      appId: "1:498316039733:web:af9c61f7d012425e16037c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+
+    const db = getFirestore(app);
+
+    const status = document.getElementById('status');
+
+    let userName = localStorage.getItem('userName');
+
+    if(!userName){
+
+      userName = prompt('名前を入力してください');
+
+      localStorage.setItem('userName',userName);
+
+    }
+
+    const ref = doc(db,'rulebook','shared');
+
+    let isSaving = false;
+
+    onSnapshot(ref,(snapshot)=>{
+
+      const data = snapshot.data();
+
+      if(!data) return;
+
+      if(!isSaving){
+
+        document.getElementById('houseworkText').innerHTML =
+          data.housework || '';
+
+        document.getElementById('moneyText').innerHTML =
+          data.money || '';
+
+        document.getElementById('todoText').innerHTML =
+          data.todo || '';
+
+      }
+
+      status.innerHTML =
+        `
+          最終編集：
+          ${data.updatedBy || '未設定'}
+          <br>
+          同期済み
+        `;
+
+      bindTableInputs();
+
+    });
+
+    async function autoSave(){
+
+      isSaving = true;
+
+      status.innerHTML =
+        `
+          保存中...
+          <br>
+          編集者：
+          ${userName}
+        `;
+
+      await setDoc(ref,{
+
+        housework:
+          document.getElementById('houseworkText').innerHTML,
+
+        money:
+          document.getElementById('moneyText').innerHTML,
+
+        todo:
+          document.getElementById('todoText').innerHTML,
+
+        updatedBy:userName,
+
+        updatedAt:new Date()
+
+      });
+
+      status.innerHTML =
+        `
+          保存済み
+          <br>
+          編集者：
+          ${userName}
+        `;
+
+      setTimeout(()=>{
+
+        isSaving = false;
+
+      },300);
+
+    }
+
+    function bindTableInputs(){
+
+      document
+        .querySelectorAll('.rule-table textarea')
+        .forEach((textarea)=>{
+
+          textarea.oninput = ()=>{
+
+            autoSave();
+
+          };
+
+        });
+
+    }
+
+    document
+      .querySelectorAll('.editor')
+      .forEach((editor)=>{
+
+        editor.addEventListener('input',()=>{
+
+          autoSave();
+
+        });
+
+      });
+
+    window.switchTab = function(el,id){
+
+      document
+        .querySelectorAll('.section')
+        .forEach((section)=>{
+
+          section.classList.remove('active');
+
+        });
+
+      document
+        .getElementById(id)
+        .classList.add('active');
+
+      document
+        .querySelectorAll('.nav-btn')
+        .forEach((btn)=>{
+
+          btn.classList.remove('active');
+
+        });
+
+      el.classList.add('active');
+
+    }
+
+    window.format = function(command){
+
+      document.execCommand(
+        command,
+        false,
+        null
+      );
+
+      autoSave();
+
+    }
+
+    window.redText = function(){
+
+      document.execCommand(
+        'foreColor',
+        false,
+        'red'
+      );
+
+      autoSave();
+
+    }
+
+    window.undoAction = function(){
+
+      document.execCommand('undo');
+
+      autoSave();
+
+    }
+
+    window.insertTable = function(targetId){
+
+      const target =
+        document.getElementById(targetId);
+
+      const wrapper =
+        document.createElement('div');
+
+      wrapper.className =
+        'rule-table-wrap';
+
+      wrapper.innerHTML = `
+
+        <div class="table-header">
+
+          <button
+            class="delete-table-btn"
+          >
+            表を削除
+          </button>
+
+        </div>
+
+        <table class="rule-table">
+
+          <tr>
+            <th>担当</th>
+            <th>内容</th>
+          </tr>
+
+          <tr>
+
+            <td>
+              <textarea>自分</textarea>
+            </td>
+
+            <td>
+              <textarea>ここに入力</textarea>
+            </td>
+
+          </tr>
+
+        </table>
+
+      `;
+
+      wrapper
+        .querySelector('.delete-table-btn')
+        .onclick = ()=>{
+
+          wrapper.remove();
+
+          autoSave();
+
+        };
+
+      target.appendChild(wrapper);
+
+      bindTableInputs();
+
+      autoSave();
+
+    }
+
+  </script>
+
+</body>
+
+</html>      top:0;
+      z-index:100;
+      background:rgba(255,255,255,0.95);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid #eee;
+      padding:16px;
+    }
+
+    .header-title{
+      font-size:22px;
+      font-weight:bold;
+    }
+
+    .status{
+      margin-top:6px;
+      font-size:12px;
+      color:#666;
+      line-height:1.6;
+    }
+
+    .container{
+      padding:16px;
+    }
+
+    .section{
+      display:none;
+    }
+
+    .section.active{
+      display:block;
+    }
+
+    .card{
+      background:#fff;
+      border-radius:20px;
+      padding:18px;
+      margin-bottom:16px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .card-title{
+      font-size:18px;
+      font-weight:bold;
+      margin-bottom:14px;
+    }
+
+    .editor-toolbar{
+      display:flex;
+      gap:8px;
+      margin-bottom:14px;
+      overflow-x:auto;
+    }
+
+    .editor-toolbar button{
+      border:none;
+      background:#eee;
+      border-radius:10px;
+      padding:10px 14px;
+      font-size:13px;
+      white-space:nowrap;
+    }
+
+    .editor{
+      min-height:calc(100vh - 320px);
+      background:#f7f7f7;
+      border-radius:16px;
+      padding:16px;
+      font-size:16px;
+      line-height:1.9;
+      overflow-y:auto;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    .editor:focus{
+      outline:none;
+    }
+
+    .bottom-nav{
+      position:fixed;
+      bottom:0;
+      left:0;
+      width:100%;
+      display:flex;
+      background:#fff;
+      border-top:1px solid #ddd;
+      padding-bottom:env(safe-area-inset-bottom);
+      z-index:999;
+    }
+
+    .nav-btn{
+      flex:1;
+      border:none;
+      background:none;
+      padding:14px 0;
+      font-size:13px;
+      color:#666;
+    }
+
+    .nav-btn.active{
+      color:#000;
+      font-weight:bold;
+    }
+
+    .rule-table-wrap{
       position:relative;
       margin:14px 0;
       overflow-x:auto;
