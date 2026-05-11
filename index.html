@@ -110,6 +110,26 @@
       font-family:inherit;
     }
 
+    .preview{
+      margin-top:16px;
+      padding:16px;
+      background:#fff;
+      border-radius:16px;
+      line-height:1.9;
+      font-size:16px;
+      white-space:pre-wrap;
+      border:1px solid #eee;
+    }
+
+    .preview strong{
+      font-weight:bold;
+    }
+
+    .preview .red{
+      color:#ff3b30;
+      font-weight:bold;
+    }
+
     .table-area{
       margin-top:18px;
     }
@@ -272,6 +292,11 @@
         ></textarea>
 
         <div
+          class="preview"
+          id="houseworkPreview"
+        ></div>
+
+        <div
           id="houseworkTables"
           class="table-area"
         ></div>
@@ -324,6 +349,11 @@
         ></textarea>
 
         <div
+          class="preview"
+          id="moneyPreview"
+        ></div>
+
+        <div
           id="moneyTables"
           class="table-area"
         ></div>
@@ -374,6 +404,11 @@
           id="todoText"
           class="main-editor"
         ></textarea>
+
+        <div
+          class="preview"
+          id="todoPreview"
+        ></div>
 
         <div
           id="todoTables"
@@ -487,6 +522,8 @@
         ).value =
           data.todo || '';
 
+        renderPreview();
+
       }
 
       status.innerHTML =
@@ -558,12 +595,63 @@
           'input',
           ()=>{
 
+            renderPreview();
+
             saveAll();
 
           }
         );
 
       });
+
+    function formatText(text){
+
+      return text
+
+        .replace(
+          /\*\*(.*?)\*\*/g,
+          '<strong>$1</strong>'
+        )
+
+        .replace(
+          /🔴(.*?)🔴/g,
+          '<span class="red">$1</span>'
+        );
+
+    }
+
+    function renderPreview(){
+
+      document.getElementById(
+        'houseworkPreview'
+      ).innerHTML =
+        formatText(
+          document.getElementById(
+            'houseworkText'
+          ).value
+        );
+
+      document.getElementById(
+        'moneyPreview'
+      ).innerHTML =
+        formatText(
+          document.getElementById(
+            'moneyText'
+          ).value
+        );
+
+      document.getElementById(
+        'todoPreview'
+      ).innerHTML =
+        formatText(
+          document.getElementById(
+            'todoText'
+          ).value
+        );
+
+    }
+
+    renderPreview();
 
     window.switchTab =
       function(el,id){
@@ -616,6 +704,8 @@
           + text
           + textarea.value.substring(end);
 
+        renderPreview();
+
         saveAll();
 
       }
@@ -645,6 +735,8 @@
           + after
           + textarea.value.substring(end);
 
+        renderPreview();
+
         saveAll();
 
       }
@@ -659,6 +751,8 @@
 
           textarea.value =
             undoHistory[id];
+
+          renderPreview();
 
           saveAll();
 
@@ -760,7 +854,14 @@
           .querySelector('.delete-btn')
           .onclick = ()=>{
 
-            tableCard.remove();
+            const ok =
+              confirm('本当に表を削除しますか？');
+
+            if(ok){
+
+              tableCard.remove();
+
+            }
 
           };
 
